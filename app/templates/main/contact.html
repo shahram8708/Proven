@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Contact Us{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="fw-bold mb-2" style="color: var(--proven-navy);">Contact Us</h1>
+                <p class="text-muted mb-5">Have a question, feedback, or partnership inquiry? We'd love to hear from you.</p>
+
+                <form method="POST" action="{{ url_for('main.contact') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Your Name</label>
+                            <input type="text" name="name" class="form-control" required maxlength="100">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <input type="email" name="email" class="form-control" required maxlength="150">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Subject</label>
+                        <select name="subject" class="form-select" required>
+                            <option value="">Select a topic</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="talent">Talent Account Question</option>
+                            <option value="employer">Employer / Billing</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="partnership">Partnership Inquiry</option>
+                            <option value="feedback">Feedback / Suggestion</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Message</label>
+                        <textarea name="message" class="form-control" rows="6" required maxlength="2000" placeholder="Tell us how we can help..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-proven-primary">Send Message</button>
+                </form>
+
+                <div class="row mt-5 g-4">
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-envelope fa-2x mb-2 text-primary"></i>
+                        <h6 class="fw-bold">Email</h6>
+                        <p class="text-muted small">hello@getproven.in</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-clock fa-2x mb-2 text-primary"></i>
+                        <h6 class="fw-bold">Response Time</h6>
+                        <p class="text-muted small">Within 24 hours</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-map-marker-alt fa-2x mb-2 text-primary"></i>
+                        <h6 class="fw-bold">Location</h6>
+                        <p class="text-muted small">Bangalore, India</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

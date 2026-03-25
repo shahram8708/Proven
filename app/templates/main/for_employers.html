@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}For Employers — Find Verified Talent{% endblock %}
+{% block content %}
+<section class="py-5" style="background: linear-gradient(135deg, var(--proven-navy), #1a2a4a); color: white;">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="display-5 fw-bold mb-3">Stop guessing. Start verifying.</h1>
+                <p class="lead opacity-75 mb-4">Find talent whose skills are backed by documented work evidence and verified by real colleagues — not self-reported claims.</p>
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-light btn-lg fw-semibold">Start Hiring on Proven</a>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <i class="fas fa-user-check" style="font-size: 8rem; opacity: 0.15;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5" style="color: var(--proven-navy);">Why Hire Through Proven?</h2>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;background:var(--proven-teal);color:white;font-size:1.5rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h5 class="fw-bold">Verified Evidence</h5>
+                <p class="text-muted">Every claim backed by named verifiers who worked with the candidate. No more guessing if someone actually did what they say.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;background:var(--proven-amber);color:white;font-size:1.5rem;">
+                    <i class="fas fa-chart-radar"></i>
+                </div>
+                <h5 class="fw-bold">5-Dimension Skill Profiles</h5>
+                <p class="text-muted">See candidates' skills mapped across Technical, Leadership, Strategic, Communication, and Analytical dimensions with radar charts.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;background:var(--proven-navy);color:white;font-size:1.5rem;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h5 class="fw-bold">AI-Powered Fraud Detection</h5>
+                <p class="text-muted">Five-layer fraud detection ensures evidence is authentic: plagiarism checks, velocity limits, AI consistency scoring, and network analysis.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background: var(--proven-light-grey);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5" style="color: var(--proven-navy);">Powerful Employer Tools</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold"><i class="fas fa-search me-2 text-primary"></i>Advanced Search & Filters</h5>
+                        <p class="text-muted mb-0">Filter talent by domain, specific skills (AND logic), verification rate, evidence count, challenge scores, region, experience level, and keywords. Find exactly who you need.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold"><i class="fas fa-columns me-2 text-primary"></i>Pipeline Management</h5>
+                        <p class="text-muted mb-0">Organize candidates through Kanban-style stages: Discovered → Reviewing → Shortlisted → Interviewing → Offered → Hired. Add private notes at each stage.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold"><i class="fas fa-list me-2 text-primary"></i>Talent Lists</h5>
+                        <p class="text-muted mb-0">Create multiple named lists to organize talent by role, team, or project. Save candidates for later review and collaborate with your hiring team.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold"><i class="fas fa-trophy me-2 text-primary"></i>Sponsored Challenges</h5>
+                        <p class="text-muted mb-0">Post branded work challenges to attract and evaluate top talent. Design your own rubric and let AI score submissions consistently.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5" style="color: var(--proven-navy);">Employer Plans</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-5">
+                <div class="card h-100 border-primary shadow">
+                    <div class="card-body p-4 text-center">
+                        <h4 class="fw-bold">Starter</h4>
+                        <p class="display-5 fw-bold mb-0" style="color: var(--proven-navy);">₹8,299</p>
+                        <p class="text-muted">/month</p>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>50 full profile views/month</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>10 contact credits/month</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Saved talent lists</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Advanced search filters</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Email support</li>
+                        </ul>
+                        <button onclick="initiateRazorpayPayment('employer_starter')" class="btn btn-proven-primary w-100 mt-3">Get Started</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <h4 class="fw-bold">Team</h4>
+                        <p class="display-5 fw-bold mb-0" style="color: var(--proven-navy);">₹29,199</p>
+                        <p class="text-muted">/month</p>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Unlimited profile views</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>50 contact credits/month</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Team sharing &amp; collaboration</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Pipeline management</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Sponsored challenges</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Priority support</li>
+                        </ul>
+                        <button onclick="initiateRazorpayPayment('employer_team')" class="btn btn-outline-primary w-100 mt-3">Get Started</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background: var(--proven-navy); color: white;">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Start finding verified talent today</h2>
+        <p class="opacity-75 mb-4">Join forward-thinking companies that hire based on evidence, not just resumes.</p>
+        <a href="{{ url_for('auth.signup') }}" class="btn btn-light btn-lg fw-semibold">Create Employer Account</a>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/razorpay_checkout.js') }}"></script>
+{% endblock %}

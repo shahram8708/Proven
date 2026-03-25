@@ -1,0 +1,169 @@
+{% extends "talent_base.html" %}
+{% block title %}{{ evidence.title }}{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+    <a href="{{ url_for('talent_dashboard.talent_dashboard') }}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-1"></i> Back to Dashboard</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="evidence-type-badge mb-2 d-inline-block">{{ evidence.evidence_type | replace('_', ' ') | title }}</span>
+                        <h3 class="fw-bold" style="color: var(--proven-navy);">{{ evidence.title }}</h3>
+                    </div>
+                    <div class="d-flex gap-2">
+                        {% if evidence.status == 'draft' %}
+                            <span class="badge bg-secondary">Draft</span>
+                        {% elif evidence.status == 'published' %}
+                            <span class="badge bg-success">Published</span>
+                        {% endif %}
+                        {% if evidence.user_id == current_user.id %}
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ url_for('evidence.evidence_edit', id=evidence.id) }}"><i class="fas fa-edit me-2"></i>Edit</a></li>
+                                    {% if evidence.status == 'draft' %}
+                                    <li>
+                                        <form method="POST" action="{{ url_for('evidence.publish_evidence', evidence_id=evidence.id) }}" class="d-inline">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button class="dropdown-item" type="submit"><i class="fas fa-globe me-2"></i>Publish</button>
+                                        </form>
+                                    </li>
+                                    {% elif evidence.status == 'published' %}
+                                    <li>
+                                        <form method="POST" action="{{ url_for('evidence.unpublish_evidence', evidence_id=evidence.id) }}" class="d-inline">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button class="dropdown-item" type="submit"><i class="fas fa-eye-slash me-2"></i>Unpublish</button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ url_for('evidence.delete_evidence', id=evidence.id) }}" class="d-inline" onsubmit="return confirm('Delete this evidence permanently?')">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button class="dropdown-item text-danger" type="submit"><i class="fas fa-trash me-2"></i>Delete</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if evidence.company_name or evidence.project_date %}
+                <div class="text-muted small mb-3">
+                    {% if evidence.company_name %}<span class="me-3"><i class="fas fa-building me-1"></i>{{ evidence.company_name }}</span>{% endif %}
+                    {% if evidence.project_date %}<span><i class="fas fa-calendar me-1"></i>{{ evidence.project_date.strftime('%b %Y') }}</span>{% endif %}
+                </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    <h5 class="fw-bold">Project Context</h5>
+                    <p class="text-muted">{{ evidence.situation_text }}</p>
+                </div>
+                <div class="mb-4">
+                    <h5 class="fw-bold">Challenge Faced</h5>
+                    <p class="text-muted">{{ evidence.approach_text }}</p>
+                </div>
+                    <div class="mb-4">
+                    <h5 class="fw-bold">Approach & Execution</h5>
+                    <p class="text-muted">{{ evidence.decisions_text }}</p>
+                </div>
+                <div class="mb-4">
+                    <h5 class="fw-bold">Key Decisions & Trade-offs</h5>
+                    <p class="text-muted">{{ evidence.outcome_text }}</p>
+                </div>
+                <div class="mb-4">
+                    <h5 class="fw-bold">Skills & Outcomes</h5>
+                    <p class="text-muted">{{ evidence.skills_text }}</p>
+                </div>
+                <div class="mb-4">
+                    <h5 class="fw-bold">Lessons & Reflection</h5>
+                    <p class="text-muted">{{ evidence.reflection_text }}</p>
+                </div>
+
+                {% if evidence.files %}
+                <div class="mb-4">
+                    <h5 class="fw-bold">Supporting Files</h5>
+                    {% for f in evidence.files %}
+                    <a href="{{ url_for('evidence.evidence_detail', id=evidence.id) }}" class="d-inline-block me-2 mb-2 badge bg-light text-dark border">
+                        <i class="fas fa-file me-1"></i>{{ f.original_filename }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if evidence.confirmed_skill_tags %}
+                <div class="mb-3">
+                    <h5 class="fw-bold">Confirmed Skills</h5>
+                    {% for tag in evidence.confirmed_skill_tags %}
+                    <span class="skill-tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if evidence.user_id == current_user.id and evidence.status == 'published' %}
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Verifications</h5>
+                {% if verifications %}
+                    {% for v in verifications %}
+                    <div class="border rounded p-3 mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong>{{ v.verifier_name }}</strong>
+                            {% from 'components/verification_badge.html' import verification_badge %}
+                            {{ verification_badge(v.status) }}
+                        </div>
+                        <small class="text-muted">{{ v.verifier_role }} {% if v.verifier_company %}at {{ v.verifier_company }}{% endif %}</small>
+                        {% if v.response_text %}
+                        <p class="text-muted small mt-2 mb-0">"{{ v.response_text }}"</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted small">No verifications yet.</p>
+                {% endif %}
+                <a href="{{ url_for('verification.request_verification', evidence_id=evidence.id) }}" class="btn btn-outline-primary btn-sm mt-2"><i class="fas fa-shield-alt me-1"></i> Request Verification</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        {% if evidence.quality_score is not none %}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body text-center">
+                <h6 class="fw-bold mb-2">Quality Score</h6>
+                <p class="display-4 fw-bold mb-1 {% if evidence.quality_score >= 70 %}text-success{% elif evidence.quality_score >= 40 %}text-warning{% else %}text-danger{% endif %}">{{ evidence.quality_score }}</p>
+                <small class="text-muted">/100</small>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">Details</h6>
+                <div class="small">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Created</span>
+                        <span>{{ evidence.created_at.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Updated</span>
+                        <span>{{ (evidence.submitted_at or evidence.created_at).strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Verifications</span>
+                        <span>{{ verifications | length if verifications else 0 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

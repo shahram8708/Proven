@@ -1,0 +1,102 @@
+{% extends "talent_base.html" %}
+{% block title %}Request Verification{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+    <a href="{{ url_for('evidence.evidence_detail', id=evidence.id) }}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-1"></i> Back to Evidence</a>
+</div>
+
+<h3 class="fw-bold mb-2" style="color: var(--proven-navy);">Request Verification</h3>
+<p class="text-muted mb-4">Invite someone who witnessed your work to verify this evidence.</p>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <span class="evidence-type-badge mb-2 d-inline-block">{{ evidence.evidence_type | replace('_', ' ') | title }}</span>
+                <h5 class="fw-bold">{{ evidence.title }}</h5>
+                <p class="text-muted small mb-0">{{ evidence.project_context[:200] }}...</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('verification.request_verification', evidence_id=evidence.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Verifier Details</h5>
+                    <div class="mb-3">
+                        {{ form.verifier_name.label(class="form-label fw-semibold") }}
+                        {{ form.verifier_name(class="form-control", placeholder="Their full name") }}
+                        {% for error in form.verifier_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.verifier_email.label(class="form-label fw-semibold") }}
+                        {{ form.verifier_email(class="form-control", placeholder="Their work email address") }}
+                        {% for error in form.verifier_email.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            {{ form.verifier_role.label(class="form-label fw-semibold") }}
+                            {{ form.verifier_role(class="form-control", placeholder="e.g. Engineering Manager") }}
+                            {% for error in form.verifier_role.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.verifier_company.label(class="form-label fw-semibold") }}
+                            {{ form.verifier_company(class="form-control", placeholder="e.g. TechCorp") }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.relationship.label(class="form-label fw-semibold") }}
+                        {{ form.relationship(class="form-select") }}
+                        {% for error in form.relationship.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-proven-primary"><i class="fas fa-paper-plane me-1"></i> Send Verification Request</button>
+                </div>
+            </div>
+        </form>
+
+        {% if existing_verifications %}
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-body">
+                <h6 class="fw-bold mb-3">Existing Verification Requests</h6>
+                {% for v in existing_verifications %}
+                <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                    <div>
+                        <strong class="small">{{ v.verifier_name }}</strong>
+                        <small class="text-muted d-block">{{ v.verifier_email }}</small>
+                    </div>
+                    {% from 'components/verification_badge.html' import verification_badge %}
+                    {{ verification_badge(v.status) }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm mb-3" style="background: #f8f9ff;">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2"><i class="fas fa-info-circle text-primary me-1"></i> How Verification Works</h6>
+                <ol class="small text-muted mb-0">
+                    <li class="mb-2">The verifier receives an email with a unique link</li>
+                    <li class="mb-2">They review your evidence without needing to create an account</li>
+                    <li class="mb-2">They confirm, qualify, or decline each claim</li>
+                    <li class="mb-2">Their response is recorded with their name and role</li>
+                    <li>The link expires after 14 days</li>
+                </ol>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2"><i class="fas fa-lightbulb text-warning me-1"></i> Tips</h6>
+                <ul class="small text-muted mb-0">
+                    <li class="mb-2">Choose people who directly observed your work</li>
+                    <li class="mb-2">Managers and team leads provide the strongest verification</li>
+                    <li class="mb-2">Use their work email for credibility</li>
+                    <li>You can send up to 20 verification requests per day</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

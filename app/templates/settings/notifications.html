@@ -1,0 +1,54 @@
+{% extends "talent_base.html" %}
+{% block title %}Notification Settings{% endblock %}
+{% block dashboard_content %}
+<h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Notification Settings</h3>
+
+<div class="row g-4">
+    <div class="col-lg-3">
+        <div class="list-group list-group-flush">
+            <a href="{{ url_for('settings.account_settings') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-user me-2"></i>Account</a>
+            <a href="{{ url_for('settings.notification_settings') }}" class="list-group-item list-group-item-action active border-0"><i class="fas fa-bell me-2"></i>Notifications</a>
+            <a href="{{ url_for('settings.billing_overview') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-credit-card me-2"></i>Billing</a>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <form method="POST" action="{{ url_for('settings.notification_settings') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Email Notifications</h5>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="verification_responses" name="verification_responses" checked>
+                        <label class="form-check-label" for="verification_responses">
+                            <strong>Verification Responses</strong>
+                            <small class="text-muted d-block">Notified when someone responds to your verification request</small>
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="contact_requests" name="contact_requests" checked>
+                        <label class="form-check-label" for="contact_requests">
+                            <strong>Contact Requests</strong>
+                            <small class="text-muted d-block">Notified when an employer requests to contact you</small>
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="challenge_results" name="challenge_results" checked>
+                        <label class="form-check-label" for="challenge_results">
+                            <strong>Challenge Results</strong>
+                            <small class="text-muted d-block">Notified when your challenge submission is scored</small>
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="product_updates" name="product_updates">
+                        <label class="form-check-label" for="product_updates">
+                            <strong>Product Updates</strong>
+                            <small class="text-muted d-block">New features, challenges, and platform improvements</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-proven-primary">Save Preferences</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

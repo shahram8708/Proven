@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('admin.admin_index') }}" class="list-group-item list-group-item-action active border-0"><i class="fas fa-chart-line me-2"></i>Overview</a>
+                <a href="{{ url_for('admin.admin_users') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-users me-2"></i>Users</a>
+                <a href="{{ url_for('admin.fraud_queue') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-exclamation-triangle me-2"></i>Fraud Queue</a>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Admin Dashboard</h3>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <p class="display-5 fw-bold mb-0" style="color:var(--proven-navy);">{{ stats.total_users }}</p>
+                            <small class="text-muted">Total Users</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <p class="display-5 fw-bold mb-0" style="color:var(--proven-teal);">{{ stats.total_evidence }}</p>
+                            <small class="text-muted">Evidence Submissions</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <p class="display-5 fw-bold mb-0" style="color:var(--proven-amber);">{{ stats.total_verifications }}</p>
+                            <small class="text-muted">Verifications</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <p class="display-5 fw-bold mb-0 text-danger">{{ stats.fraud_flagged }}</p>
+                            <small class="text-muted">Fraud Flagged</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3">User Breakdown</h5>
+                            <div class="d-flex justify-content-between mb-2"><span>Talent accounts</span><strong>{{ stats.talent_count }}</strong></div>
+                            <div class="d-flex justify-content-between mb-2"><span>Employer accounts</span><strong>{{ stats.employer_count }}</strong></div>
+                            <div class="d-flex justify-content-between mb-2"><span>Verified emails</span><strong>{{ stats.verified_emails }}</strong></div>
+                            <div class="d-flex justify-content-between"><span>Active subscriptions</span><strong>{{ stats.active_subscriptions }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3">Content Stats</h5>
+                            <div class="d-flex justify-content-between mb-2"><span>Published evidence</span><strong>{{ stats.published_evidence }}</strong></div>
+                            <div class="d-flex justify-content-between mb-2"><span>Draft evidence</span><strong>{{ stats.draft_evidence }}</strong></div>
+                            <div class="d-flex justify-content-between mb-2"><span>Challenge submissions</span><strong>{{ stats.challenge_submissions }}</strong></div>
+                            <div class="d-flex justify-content-between"><span>Contact requests</span><strong>{{ stats.contact_requests }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

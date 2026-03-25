@@ -1,0 +1,90 @@
+{% extends "talent_base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block dashboard_content %}
+<h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Edit Profile</h3>
+
+<form method="POST" action="{{ url_for('profile.edit_profile') }}">
+    {{ form.hidden_tag() }}
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Personal Information</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ form.full_name.label(class="form-label fw-semibold") }}
+                            {{ form.full_name(class="form-control") }}
+                            {% for error in form.full_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.current_title.label(class="form-label fw-semibold") }}
+                            {{ form.current_title(class="form-control", placeholder="e.g. Senior Software Engineer") }}
+                            {% for error in form.current_title.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            {{ form.location.label(class="form-label fw-semibold") }}
+                            {{ form.location(class="form-control", placeholder="e.g. Bangalore, India") }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.experience_level.label(class="form-label fw-semibold") }}
+                            {{ form.experience_level(class="form-select") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Professional Details</h5>
+                    <div class="mb-3">
+                        {{ form.bio.label(class="form-label fw-semibold") }}
+                        {{ form.bio(class="form-control", rows="4", placeholder="Brief professional bio...") }}
+                        <small class="text-muted">Max 500 characters</small>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.domain.label(class="form-label fw-semibold") }}
+                        {{ form.domain(class="form-select") }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Links</h5>
+                    <div class="mb-3">
+                        {{ form.linkedin_url.label(class="form-label fw-semibold") }}
+                        {{ form.linkedin_url(class="form-control", placeholder="https://linkedin.com/in/yourprofile") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.github_url.label(class="form-label fw-semibold") }}
+                        {{ form.github_url(class="form-control", placeholder="https://github.com/yourusername") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.portfolio_url.label(class="form-label fw-semibold") }}
+                        {{ form.portfolio_url(class="form-control", placeholder="https://yourportfolio.com") }}
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-proven-primary">Save Changes</button>
+            <a href="{{ url_for('profile.public_profile', username=current_user.username) }}" class="btn btn-outline-secondary ms-2">View Public Profile</a>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Profile Tips</h6>
+                    <ul class="small text-muted mb-0">
+                        <li class="mb-2">Complete all fields to increase your profile strength</li>
+                        <li class="mb-2">A professional bio helps employers understand your background</li>
+                        <li class="mb-2">Add links to your LinkedIn, GitHub, or portfolio</li>
+                        <li>Your verified evidence and skills are shown automatically</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

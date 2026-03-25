@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="d-flex">
+    <div class="sidebar bg-white border-end d-none d-lg-block" style="width: 250px; min-height: calc(100vh - 60px);">
+        <div class="p-3">
+            <div class="text-center mb-4 pt-3">
+                <div class="rounded-circle bg-success d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <span class="text-white fw-bold fs-4">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</span>
+                </div>
+                <h6 class="mt-2 mb-0">{{ current_user.full_name }}</h6>
+                <small class="text-muted">Employer</small>
+            </div>
+            <nav class="nav flex-column">
+                <a class="nav-link sidebar-link" href="{{ url_for('employer_dashboard.employer_dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('discover.discover_index') }}"><i class="fas fa-search me-2"></i>Discover Talent</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('discover.talent_lists') }}"><i class="fas fa-list me-2"></i>Talent Lists</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('employer_dashboard.candidate_pipeline') }}"><i class="fas fa-columns me-2"></i>Pipeline</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('settings.account_settings') }}"><i class="fas fa-cog me-2"></i>Settings</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('settings.billing_overview') }}"><i class="fas fa-credit-card me-2"></i>Billing</a>
+            </nav>
+        </div>
+    </div>
+    <div class="flex-grow-1 p-4">
+        {% block dashboard_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

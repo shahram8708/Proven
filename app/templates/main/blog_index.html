@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Blog{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-4" style="color: var(--proven-navy);">Proven Blog</h1>
+        <p class="lead text-muted mb-5">Insights on verified hiring, skill demonstration, and building a career on evidence.</p>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <span class="badge bg-primary mb-2">Career</span>
+                        <h5 class="fw-bold">Why Your Resume Isn't Enough Anymore</h5>
+                        <p class="text-muted small">Self-reported credentials are losing trust. Here's how evidence-based profiles are changing the game for job seekers.</p>
+                        <small class="text-muted">Dec 15, 2024 • 5 min read</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <span class="badge mb-2" style="background:var(--proven-teal)">Hiring</span>
+                        <h5 class="fw-bold">The Cost of a Bad Hire — And How to Avoid It</h5>
+                        <p class="text-muted small">Bad hires cost 3-5x salary. Learn how verified evidence profiles reduce hiring risk and improve quality of hire.</p>
+                        <small class="text-muted">Dec 10, 2024 • 7 min read</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <span class="badge mb-2" style="background:var(--proven-amber)">Skills</span>
+                        <h5 class="fw-bold">How to Write Compelling Evidence Submissions</h5>
+                        <p class="text-muted small">A step-by-step guide to documenting your work using Proven's structured evidence framework for maximum impact.</p>
+                        <small class="text-muted">Dec 5, 2024 • 6 min read</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="text-muted">More blog posts coming soon. <a href="{{ url_for('auth.signup') }}">Sign up</a> to get notified.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

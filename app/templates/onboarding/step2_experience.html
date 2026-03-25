@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Your Background — Step 2{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center mb-4">
+                    <div class="d-flex justify-content-center gap-2 mb-3">
+                        <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check"></i></span>
+                        <span class="badge bg-primary rounded-pill px-3 py-2">2</span>
+                        <span class="badge bg-light text-muted rounded-pill px-3 py-2">3</span>
+                    </div>
+                    <h2 class="fw-bold" style="color: var(--proven-navy);">Tell us about your experience</h2>
+                    <p class="text-muted">This helps us personalize your profile and recommendations.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('onboarding.onboarding_step2') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Years of Experience</label>
+                        <select name="years_experience" class="form-select" required>
+                            <option value="">Select your years</option>
+                            <option value="1" {% if session.get('onboarding_experience') == 'entry' %}selected{% endif %}>0-2 years</option>
+                            <option value="3" {% if session.get('onboarding_experience') == 'mid' %}selected{% endif %}>3-5 years</option>
+                            <option value="6" {% if session.get('onboarding_experience') == 'senior' %}selected{% endif %}>6-10 years</option>
+                            <option value="10" {% if session.get('onboarding_experience') == 'lead' %}selected{% endif %}>10+ years</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">City</label>
+                        <input type="text" name="location_city" class="form-control" maxlength="120" value="{{ session.get('onboarding_location_city', '') }}" placeholder="e.g. Bangalore">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Country</label>
+                        <input type="text" name="location_country" class="form-control" maxlength="100" value="{{ session.get('onboarding_location_country', '') }}" placeholder="e.g. India">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('onboarding.onboarding_step1') }}" class="btn btn-outline-secondary">Back</a>
+                        <button type="submit" class="btn btn-proven-primary flex-grow-1">Continue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

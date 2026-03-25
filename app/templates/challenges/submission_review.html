@@ -1,0 +1,91 @@
+{% extends "talent_base.html" %}
+{% block title %}Submission Review{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+    <a href="{{ url_for('challenges.challenge_detail', challenge_id=submission.challenge.id) }}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-1"></i> Back to Challenge</a>
+</div>
+
+<h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Submission Review</h3>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body p-4">
+                <div class="d-flex gap-2 mb-2">
+                    <span class="badge bg-primary">{{ submission.challenge.domain }}</span>
+                    <span class="badge bg-info">{{ submission.challenge.challenge_type | replace('_', ' ') | title }}</span>
+                </div>
+                <h5 class="fw-bold">{{ submission.challenge.title }}</h5>
+                <small class="text-muted">Submitted {{ submission.submitted_at.strftime('%b %d, %Y at %I:%M %p') }}</small>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Your Response</h5>
+                <div class="text-muted" style="white-space: pre-wrap;">{{ submission.response_text }}</div>
+            </div>
+        </div>
+
+        {% if submission.ai_feedback %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3"><i class="fas fa-robot text-primary me-1"></i> AI Feedback</h5>
+                <div class="text-muted">{{ submission.ai_feedback }}</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        {% if submission.auto_quality_score is not none %}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body text-center">
+                <h6 class="fw-bold mb-2">Overall Score</h6>
+                <p class="display-3 fw-bold mb-1 {% if submission.auto_quality_score >= 70 %}text-success{% elif submission.auto_quality_score >= 40 %}text-warning{% else %}text-danger{% endif %}">{{ submission.auto_quality_score }}</p>
+                <small class="text-muted">/100</small>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if submission.dimension_scores %}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <h6 class="fw-bold mb-3">Dimension Scores</h6>
+                {% for dim, score in submission.dimension_scores.items() %}
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>{{ dim }}</span>
+                        <span class="fw-bold">{{ score }}/100</span>
+                    </div>
+                    <div class="progress" style="height:6px;">
+                        <div class="progress-bar {% if score >= 70 %}bg-success{% elif score >= 40 %}bg-warning{% else %}bg-danger{% endif %}" style="width:{{ score }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">Challenge Info</h6>
+                <div class="small">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Difficulty</span>
+                        <span class="badge {% if submission.challenge.difficulty == 'beginner' %}bg-success{% elif submission.challenge.difficulty == 'intermediate' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ submission.challenge.difficulty | title }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Time Limit</span>
+                        <span>{{ submission.challenge.time_limit_minutes }} min</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Time Taken</span>
+                        <span>{{ submission.time_taken_minutes or 'N/A' }} min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

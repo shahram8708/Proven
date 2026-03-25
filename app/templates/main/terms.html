@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Terms of Service{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="fw-bold mb-2" style="color: var(--proven-navy);">Terms of Service</h1>
+                <p class="text-muted mb-4">Last updated: January 2025</p>
+
+                <h5 class="fw-bold mt-4">1. Acceptance of Terms</h5>
+                <p class="text-muted">By accessing or using Proven, you agree to these Terms of Service. If you do not agree, do not use the platform.</p>
+
+                <h5 class="fw-bold mt-4">2. Account Types</h5>
+                <p class="text-muted">Proven offers two account types: Talent (professionals demonstrating their skills) and Employer (companies searching for verified talent). You must select one account type during registration.</p>
+
+                <h5 class="fw-bold mt-4">3. Evidence Submissions</h5>
+                <p class="text-muted">You are responsible for the accuracy of evidence you submit. Evidence must describe your actual work contributions. Fabricated, plagiarized, or misleading evidence will result in account suspension. Our AI-powered fraud detection system monitors all submissions.</p>
+
+                <h5 class="fw-bold mt-4">4. Verification Process</h5>
+                <p class="text-muted">Verifiers provide responses voluntarily and are responsible for the truthfulness of their statements. Verification requests expire after 14 days. Proven is not responsible for verifier response accuracy but tracks verifier identities for accountability.</p>
+
+                <h5 class="fw-bold mt-4">5. Employer Obligations</h5>
+                <p class="text-muted">Employers must use the platform for legitimate recruiting purposes. Contact credits must be used for genuine hiring interest. Employer notes on candidates are private and not visible to talent. Employers must not share talent profiles or contact information outside their organization without consent.</p>
+
+                <h5 class="fw-bold mt-4">6. Intellectual Property</h5>
+                <p class="text-muted">You retain ownership of your evidence content. By submitting content, you grant Proven a license to display, process (including AI analysis), and distribute it as part of the platform services. Confidential work details should be appropriately anonymized.</p>
+
+                <h5 class="fw-bold mt-4">7. Subscription & Billing</h5>
+                <p class="text-muted">Employer subscriptions are billed monthly through Razorpay in Indian Rupees (INR). You may cancel anytime. Refunds are not provided for partial billing periods. Contact credits do not roll over between billing cycles.</p>
+
+                <h5 class="fw-bold mt-4">8. Prohibited Conduct</h5>
+                <p class="text-muted">You may not: submit false evidence, create fake verification rings, use automated tools to scrape profiles, impersonate others, circumvent fraud detection, or use the platform for any unlawful purpose.</p>
+
+                <h5 class="fw-bold mt-4">9. Account Suspension</h5>
+                <p class="text-muted">Proven reserves the right to suspend or terminate accounts that violate these terms, submit fraudulent evidence, or engage in prohibited conduct. Fraud flags are reviewed by our admin team before action is taken.</p>
+
+                <h5 class="fw-bold mt-4">10. Limitation of Liability</h5>
+                <p class="text-muted">Proven provides the platform "as is" without warranty. We are not liable for hiring decisions made based on platform data, verifier response accuracy, or AI scoring results. Our liability is limited to the amount paid for services in the preceding 12 months.</p>
+
+                <h5 class="fw-bold mt-4">11. Governing Law</h5>
+                <p class="text-muted">These terms are governed by the laws of India. Disputes shall be resolved in the courts of Bangalore, Karnataka.</p>
+
+                <h5 class="fw-bold mt-4">12. Contact</h5>
+                <p class="text-muted">For questions about these terms, reach us at legal@getproven.in or through our <a href="{{ url_for('main.contact') }}">contact page</a>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

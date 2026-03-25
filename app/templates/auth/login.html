@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-1 fw-bold" style="color: var(--proven-navy);">Welcome Back</h2>
+                    <p class="text-center text-muted mb-4">Log in to your Proven account</p>
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.email.label.text }}</label>
+                            {{ form.email(class="form-control", placeholder="you@example.com") }}
+                            {% for error in form.email.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label d-flex justify-content-between">
+                                {{ form.password.label.text }}
+                                <a href="{{ url_for('auth.forgot_password') }}" class="text-decoration-none small">Forgot password?</a>
+                            </label>
+                            {{ form.password(class="form-control") }}
+                            {% for error in form.password.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="mb-4 form-check">
+                            {{ form.remember_me(class="form-check-input") }}
+                            <label class="form-check-label">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-proven-primary w-100 mb-3">Log In</button>
+                        <p class="text-center text-muted mb-0">Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign up free</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

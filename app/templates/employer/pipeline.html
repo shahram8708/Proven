@@ -1,0 +1,148 @@
+{% extends "employer_base.html" %}
+{% block title %}Pipeline{% endblock %}
+{% block extra_css %}
+<style>
+.kanban-column { min-height: 400px; }
+.kanban-card { cursor: grab; border-radius: 8px; transition: box-shadow 0.2s; }
+.kanban-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.kanban-header { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+</style>
+{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0" style="color: var(--proven-navy);">Pipeline</h3>
+    <div class="d-flex gap-2">
+        {% if talent_lists %}
+        <select id="listFilter" class="form-select form-select-sm" style="width: auto;">
+            <option value="">All Lists</option>
+            {% for tl in talent_lists %}
+            <option value="{{ tl.id }}">{{ tl.name }}</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3" style="overflow-x: auto; flex-wrap: nowrap;">
+    {% set stages = [
+        ('discovered', 'Discovered', 'bg-light'),
+        ('reviewing', 'Reviewing', 'bg-info bg-opacity-10'),
+        ('shortlisted', 'Shortlisted', 'bg-primary bg-opacity-10'),
+        ('interviewing', 'Interviewing', 'bg-warning bg-opacity-10'),
+        ('offered', 'Offered', 'bg-success bg-opacity-10'),
+        ('hired', 'Hired', 'bg-success bg-opacity-25')
+    ] %}
+    {% for stage_value, stage_label, stage_bg in stages %}
+    <div class="col" style="min-width: 250px;">
+        <div class="kanban-column {{ stage_bg }} rounded-3 p-3">
+            <div class="kanban-header fw-bold text-muted mb-3 d-flex justify-content-between">
+                <span>{{ stage_label }}</span>
+                <span class="badge bg-secondary rounded-pill pipeline-count" data-stage="{{ stage_value }}">0</span>
+            </div>
+            <div class="pipeline-stage" data-stage="{{ stage_value }}">
+                {% for tl in talent_lists %}
+                    {% for member in tl.members %}
+                        {% if member.pipeline_stage == stage_value %}
+                        <div class="kanban-card card border-0 shadow-sm mb-2 pipeline-card" data-member-id="{{ member.id }}" data-list="{{ tl.id }}">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
+                                        <span class="text-white small fw-bold">{{ member.talent.full_name[0] if member.talent.full_name else member.talent.username[0] | upper }}</span>
+                                    </div>
+                                    <div>
+                                        <small class="fw-bold d-block">{{ member.talent.full_name or member.talent.username }}</small>
+                                        <small class="text-muted">{{ member.talent.current_title or member.talent.domain or '' }}</small>
+                                    </div>
+                                </div>
+                                {% if member.talent.verification_rate is defined %}
+                                <small class="text-muted"><i class="fas fa-shield-alt me-1"></i>{{ (member.talent.verification_rate * 100) | round | int }}% verified</small>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <select class="form-select form-select-sm stage-select" data-member-id="{{ member.id }}" data-list-id="{{ tl.id }}">
+                                        {% for sv, sl, _ in stages %}
+                                        <option value="{{ sv }}" {% if sv == stage_value %}selected{% endif %}>{{ sl }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mt-2">
+                                    <textarea class="form-control form-control-sm notes-input" data-member-id="{{ member.id }}" data-list-id="{{ tl.id }}" rows="2" placeholder="Private notes..." maxlength="1000">{{ member.employer_notes or '' }}</textarea>
+                                    <button class="btn btn-sm btn-link p-0 mt-1 save-notes-btn" data-member-id="{{ member.id }}" data-list-id="{{ tl.id }}">Save</button>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">List: {{ tl.name }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not talent_lists or (talent_lists | sum(attribute='members', start=[]) | length) == 0 %}
+<div class="text-center py-5">
+    <i class="fas fa-columns fa-3x text-muted mb-3"></i>
+    <h5>Your pipeline is empty</h5>
+    <p class="text-muted">Start discovering talent and add them to lists to manage your hiring pipeline.</p>
+    <a href="{{ url_for('discover.discover_index') }}" class="btn btn-proven-primary">Discover Talent</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.pipeline-stage').forEach(function(stage) {
+        const count = stage.querySelectorAll('.pipeline-card').length;
+        const badge = document.querySelector('.pipeline-count[data-stage="' + stage.dataset.stage + '"]');
+        if (badge) badge.textContent = count;
+    });
+
+    document.querySelectorAll('.stage-select').forEach(function(select) {
+        select.addEventListener('change', function() {
+            const memberId = this.dataset.memberId;
+            const listId = this.dataset.listId;
+            const newStage = this.value;
+            fetch('/discover/lists/' + listId + '/pipeline', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name=csrf-token]').content},
+                body: JSON.stringify({member_id: parseInt(memberId), stage: newStage})
+            }).then(r => r.json()).then(data => {
+                if (data.success) location.reload();
+            });
+        });
+    });
+
+    document.querySelectorAll('.save-notes-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const memberId = this.dataset.memberId;
+            const listId = this.dataset.listId;
+            const notes = document.querySelector('.notes-input[data-member-id="' + memberId + '"][data-list-id="' + listId + '"]').value;
+            fetch('/discover/lists/' + listId + '/notes', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name=csrf-token]').content},
+                body: JSON.stringify({member_id: parseInt(memberId), notes: notes})
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    btn.textContent = 'Saved!';
+                    setTimeout(() => btn.textContent = 'Save', 2000);
+                }
+            });
+        });
+    });
+
+    const listFilter = document.getElementById('listFilter');
+    if (listFilter) {
+        listFilter.addEventListener('change', function() {
+            const listId = this.value;
+            document.querySelectorAll('.pipeline-card').forEach(function(card) {
+                card.style.display = (!listId || card.dataset.list === listId) ? '' : 'none';
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

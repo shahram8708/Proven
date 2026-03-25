@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Choose Your Domain — Step 1{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center mb-4">
+                    <div class="d-flex justify-content-center gap-2 mb-3">
+                        <span class="badge bg-primary rounded-pill px-3 py-2">1</span>
+                        <span class="badge bg-light text-muted rounded-pill px-3 py-2">2</span>
+                        <span class="badge bg-light text-muted rounded-pill px-3 py-2">3</span>
+                    </div>
+                    <h2 class="fw-bold" style="color: var(--proven-navy);">What's your domain?</h2>
+                    <p class="text-muted">Select the professional area that best describes your expertise.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('onboarding.onboarding_step1') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row g-3 mb-4">
+                        {% set domains = [
+                            ('software_engineering', 'Software Engineering', 'fas fa-code'),
+                            ('data_science', 'Data Science & Analytics', 'fas fa-chart-bar'),
+                            ('product_management', 'Product Management', 'fas fa-boxes-stacked'),
+                            ('design', 'Design & UX', 'fas fa-palette'),
+                            ('marketing', 'Marketing & Growth', 'fas fa-bullhorn'),
+                            ('operations', 'Operations & Strategy', 'fas fa-cogs'),
+                            ('finance', 'Finance & Accounting', 'fas fa-chart-line'),
+                            ('sales', 'Sales & BD', 'fas fa-handshake'),
+                            ('hr', 'HR & People', 'fas fa-users')
+                        ] %}
+                        {% for value, label, icon in domains %}
+                        <div class="col-6">
+                            <input type="radio" name="primary_domain" id="domain_{{ value }}" value="{{ value }}" class="btn-check" {% if session.get('onboarding_domain') == value %}checked{% endif %} required>
+                            <label class="btn btn-outline-primary w-100 p-3 text-start" for="domain_{{ value }}">
+                                <i class="{{ icon }} me-2"></i>{{ label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-proven-primary w-100 btn-lg">Continue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

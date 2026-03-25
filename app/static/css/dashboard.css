@@ -1,0 +1,290 @@
+/* ========================================
+   Proven — Dashboard Styles
+   ======================================== */
+
+/* --- Dashboard Layout --- */
+.dashboard-container {
+    padding: 24px 0;
+}
+.dashboard-header {
+    margin-bottom: 24px;
+}
+.dashboard-header h2 {
+    font-weight: 800;
+    margin: 0;
+}
+.dashboard-subtitle {
+    color: var(--proven-text-muted);
+    font-size: 0.9rem;
+}
+
+/* --- Stat Cards --- */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.dashboard-stat-card {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.dashboard-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--proven-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.dashboard-stat-icon-navy {
+    background: rgba(15, 33, 79, 0.1);
+    color: var(--proven-navy);
+}
+.dashboard-stat-icon-teal {
+    background: rgba(15, 111, 94, 0.1);
+    color: var(--proven-teal);
+}
+.dashboard-stat-icon-amber {
+    background: rgba(212, 168, 67, 0.1);
+    color: var(--proven-amber);
+}
+.dashboard-stat-number {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--proven-navy);
+    line-height: 1;
+}
+.dashboard-stat-label {
+    font-size: 0.8rem;
+    color: var(--proven-text-muted);
+}
+
+/* --- Profile Strength --- */
+.profile-strength-circle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+}
+.profile-strength-circle svg {
+    transform: rotate(-90deg);
+}
+.profile-strength-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--proven-navy);
+}
+
+/* --- Dashboard Section --- */
+.dashboard-section {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+.dashboard-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--proven-navy);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* --- Evidence List --- */
+.evidence-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--proven-border);
+}
+.evidence-list-item:last-child {
+    border-bottom: none;
+}
+.evidence-list-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--proven-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.evidence-list-info {
+    flex: 1;
+    min-width: 0;
+}
+.evidence-list-title {
+    font-weight: 600;
+    color: var(--proven-navy);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.evidence-list-meta {
+    font-size: 0.75rem;
+    color: var(--proven-text-muted);
+}
+
+/* --- Sidebar Card --- */
+.sidebar-card {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+.sidebar-card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--proven-navy);
+    margin-bottom: 12px;
+}
+
+/* --- Kanban Pipeline --- */
+.kanban-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+}
+.kanban-column {
+    min-width: 260px;
+    flex: 1;
+    background: var(--proven-bg);
+    border-radius: var(--proven-radius);
+    padding: 12px;
+}
+.kanban-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px;
+    margin-bottom: 8px;
+}
+.kanban-column-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--proven-navy);
+}
+.kanban-column-count {
+    background: var(--proven-white);
+    color: var(--proven-text-muted);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+.kanban-card {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius);
+    padding: 12px;
+    margin-bottom: 8px;
+    transition: var(--proven-transition);
+    cursor: pointer;
+}
+.kanban-card:hover {
+    box-shadow: var(--proven-shadow);
+}
+.kanban-card-name {
+    font-weight: 600;
+    color: var(--proven-navy);
+    font-size: 0.875rem;
+}
+.kanban-card-meta {
+    font-size: 0.75rem;
+    color: var(--proven-text-muted);
+    margin-top: 4px;
+}
+
+/* --- Quick Actions --- */
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius);
+    background: var(--proven-white);
+    color: var(--proven-navy);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: var(--proven-transition);
+    width: 100%;
+}
+.quick-action-btn:hover {
+    background: var(--proven-bg);
+    color: var(--proven-teal);
+    border-color: var(--proven-teal);
+}
+.quick-action-btn i {
+    width: 20px;
+    text-align: center;
+}
+
+/* --- Subscription Info --- */
+.subscription-card {
+    background: linear-gradient(135deg, var(--proven-navy) 0%, #1a3a7a 100%);
+    color: white;
+    border-radius: var(--proven-radius-lg);
+    padding: 24px;
+}
+.subscription-card h6 {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.subscription-plan {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: white;
+}
+.subscription-credits {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-top: 8px;
+}
+.subscription-credits-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--proven-amber);
+}
+.subscription-credits-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+    .kanban-container {
+        flex-direction: column;
+    }
+    .kanban-column {
+        min-width: 100%;
+    }
+}

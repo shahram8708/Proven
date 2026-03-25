@@ -1,0 +1,91 @@
+{% extends "talent_base.html" %}
+{% block title %}Review Extracted Skills{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+    <a href="{{ url_for('evidence.evidence_detail', id=evidence.id) }}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-1"></i> Back to Evidence</a>
+</div>
+
+<h3 class="fw-bold mb-2" style="color: var(--proven-navy);">Review AI-Extracted Skills</h3>
+<p class="text-muted mb-4">Our AI extracted these skills from your evidence. Confirm the ones that are accurate, remove any that aren't relevant.</p>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <h6 class="fw-bold mb-1">{{ evidence.title }}</h6>
+                <span class="evidence-type-badge mb-2 d-inline-block">{{ evidence.evidence_type | replace('_', ' ') | title }}</span>
+                <p class="text-muted small mb-0">{{ evidence.situation_text[:200] if evidence.situation_text else '' }}{% if evidence.situation_text and evidence.situation_text|length > 200 %}...{% endif %}</p>
+            </div>
+        </div>
+
+        {% set ai_skills = evidence.ai_extracted_skills or [] %}
+        <form method="POST" action="{{ url_for('evidence.skills_review', id=evidence.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Extracted Skills</h5>
+                    {% if ai_skills %}
+                        {% for skill in ai_skills %}
+                        <div class="form-check mb-3 p-3 border rounded">
+                            <input class="form-check-input" type="checkbox" name="confirmed_skills" value="{{ skill.id }}" id="skill_{{ skill.id }}" checked>
+                            <label class="form-check-label" for="skill_{{ skill.id }}">
+                                <strong>{{ skill.name }}</strong>
+                                <span class="badge bg-light text-muted ms-2">{{ skill.dimension }}</span>
+                                {% if skill.domain %}<span class="badge bg-light text-muted">{{ skill.domain }}</span>{% endif %}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <p class="text-muted">No skills were extracted. This might indicate the evidence needs more specific details.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" name="action" value="confirm_and_publish" class="btn btn-proven-primary">Confirm Skills & Publish</button>
+                <button type="submit" name="action" value="confirm_draft" class="btn btn-outline-secondary">Confirm & Keep as Draft</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-4">
+        {% if evidence.quality_score is not none %}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body text-center">
+                <h6 class="fw-bold mb-2">Quality Score</h6>
+                <p class="display-4 fw-bold mb-0 {% if evidence.quality_score >= 70 %}text-success{% elif evidence.quality_score >= 40 %}text-warning{% else %}text-danger{% endif %}">{{ evidence.quality_score }}</p>
+                <p class="text-muted small">/100</p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if evidence.fraud_flag_level %}
+        <div class="card border-0 shadow-sm mb-3 {% if evidence.fraud_flag_level == 'high' %}border-danger{% elif evidence.fraud_flag_level == 'medium' %}border-warning{% endif %}">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">
+                    <i class="fas fa-exclamation-triangle {% if evidence.fraud_flag_level == 'high' %}text-danger{% elif evidence.fraud_flag_level == 'medium' %}text-warning{% else %}text-info{% endif %} me-1"></i>
+                    Fraud Check
+                </h6>
+                <span class="badge {% if evidence.fraud_flag_level == 'high' %}bg-danger{% elif evidence.fraud_flag_level == 'medium' %}bg-warning text-dark{% else %}bg-info{% endif %}">{{ evidence.fraud_flag_level | title }} Risk</span>
+                <p class="text-muted small mt-2 mb-0">
+                    {% if evidence.fraud_flag_level == 'high' %}This evidence has been flagged for review by our team.{% elif evidence.fraud_flag_level == 'medium' %}Some aspects may need review.{% else %}No significant concerns detected.{% endif %}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">What happens next?</h6>
+                <ul class="small text-muted mb-0">
+                    <li class="mb-2">Confirmed skills are added to your profile</li>
+                    <li class="mb-2">Published evidence is visible to employers</li>
+                    <li class="mb-2">You can request verification from colleagues</li>
+                    <li>More verifications = higher visibility</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

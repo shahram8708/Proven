@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}How It Works{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold" style="color: var(--proven-navy);">How Proven Works</h1>
+            <p class="lead text-muted">From invisible skills to verified evidence — in three steps</p>
+        </div>
+
+        <div class="row g-5 align-items-center mb-5">
+            <div class="col-md-6">
+                <span class="badge bg-primary rounded-pill fs-6 mb-3">Step 1</span>
+                <h3 class="fw-bold">Submit Your Evidence</h3>
+                <p class="text-muted">Document real work using our structured evidence framework. We guided you to detail:</p>
+                <ul class="text-muted">
+                    <li><strong>Project Context</strong> — What was the situation and your role?</li>
+                    <li><strong>Challenge Faced</strong> — What problem needed solving?</li>
+                    <li><strong>Approach Taken</strong> — What was your strategy and execution?</li>
+                    <li><strong>Key Decisions</strong> — What trade-offs did you navigate?</li>
+                    <li><strong>Measurable Outcomes</strong> — What results did you achieve?</li>
+                    <li><strong>Lessons Learned</strong> — What would you do differently?</li>
+                </ul>
+                <p class="text-muted">Our AI automatically extracts skills from your evidence and scores its quality across multiple dimensions.</p>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="fas fa-file-alt text-primary fa-2x"></i>
+                        <div>
+                            <h6 class="mb-0">Evidence Quality Score</h6>
+                            <small class="text-muted">AI evaluates 6 dimensions</small>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small"><span>Completeness</span><span>18/20</span></div>
+                        <div class="progress" style="height:6px;"><div class="progress-bar bg-success" style="width:90%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small"><span>Specificity</span><span>16/20</span></div>
+                        <div class="progress" style="height:6px;"><div class="progress-bar bg-success" style="width:80%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small"><span>Measurability</span><span>17/20</span></div>
+                        <div class="progress" style="height:6px;"><div class="progress-bar bg-success" style="width:85%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small"><span>Verification</span><span>20/25</span></div>
+                        <div class="progress" style="height:6px;"><div class="progress-bar bg-success" style="width:80%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small"><span>Recency</span><span>8/10</span></div>
+                        <div class="progress" style="height:6px;"><div class="progress-bar bg-info" style="width:80%"></div></div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between small"><span>Anti-fraud</span><span>5/5</span></div>
+                        <div class="progress" style="height:6px;"><div class="progress-bar bg-success" style="width:100%"></div></div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <span class="fs-3 fw-bold text-success">84</span><span class="text-muted">/100</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5">
+
+        <div class="row g-5 align-items-center mb-5 flex-md-row-reverse">
+            <div class="col-md-6">
+                <span class="badge rounded-pill fs-6 mb-3" style="background: var(--proven-teal);">Step 2</span>
+                <h3 class="fw-bold">Get Verified</h3>
+                <p class="text-muted">Send verification requests to people who witnessed your work — managers, teammates, clients, or collaborators.</p>
+                <ul class="text-muted">
+                    <li><strong>Token-based access</strong> — Verifiers don't need a Proven account</li>
+                    <li><strong>Specific responses</strong> — They confirm, qualify, or decline each claim</li>
+                    <li><strong>Identity tracked</strong> — Name, role, and relationship recorded</li>
+                    <li><strong>14-day window</strong> — Links expire to prevent stale requests</li>
+                </ul>
+                <p class="text-muted">Each verification raises your profile's trust score, making you more visible to employers.</p>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="fas fa-shield-alt fa-2x" style="color:var(--proven-teal)"></i>
+                        <h6 class="mb-0">Verification Response</h6>
+                    </div>
+                    <div class="bg-light rounded p-3 mb-3">
+                        <small class="text-muted d-block mb-1"><strong>Priya Menon</strong> • Engineering Manager at TechCorp</small>
+                        <span class="badge bg-success me-1">Confirmed</span>
+                        <p class="mb-0 small text-muted mt-2">"I confirm that Ravi led the API redesign. His architecture proposal was adopted company-wide. The latency improvement was measured at 43%, slightly above the 40% he stated."</p>
+                    </div>
+                    <div class="bg-light rounded p-3">
+                        <small class="text-muted d-block mb-1"><strong>Amit Patel</strong> • Senior Dev at TechCorp</small>
+                        <span class="badge bg-info me-1">Confirmed with qualification</span>
+                        <p class="mb-0 small text-muted mt-2">"The project was a team effort. Ravi did lead the architecture design, though the implementation was more collaborative than implied."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5">
+
+        <div class="row g-5 align-items-center mb-5">
+            <div class="col-md-6">
+                <span class="badge rounded-pill fs-6 mb-3" style="background: var(--proven-amber);">Step 3</span>
+                <h3 class="fw-bold">Get Discovered</h3>
+                <p class="text-muted">Your verified evidence profile becomes searchable by employers looking for real, proven talent.</p>
+                <ul class="text-muted">
+                    <li><strong>Skill-based search</strong> — Employers find you by demonstrated abilities</li>
+                    <li><strong>Verification filter</strong> — Higher verification rates = more visibility</li>
+                    <li><strong>Quality ranking</strong> — Evidence quality score influences your ranking</li>
+                    <li><strong>Domain matching</strong> — Appear in searches relevant to your expertise</li>
+                </ul>
+                <p class="text-muted">No applications needed. Employers come to you because your work speaks for itself.</p>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 text-center">
+                    <i class="fas fa-search fa-3x mb-3" style="color:var(--proven-amber)"></i>
+                    <h6>Employers can filter by</h6>
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                        <span class="badge bg-light text-dark border">Domain</span>
+                        <span class="badge bg-light text-dark border">Skills</span>
+                        <span class="badge bg-light text-dark border">Verification Rate</span>
+                        <span class="badge bg-light text-dark border">Evidence Count</span>
+                        <span class="badge bg-light text-dark border">Region</span>
+                        <span class="badge bg-light text-dark border">Experience Level</span>
+                        <span class="badge bg-light text-dark border">Challenge Scores</span>
+                        <span class="badge bg-light text-dark border">Keywords</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center py-5">
+            <h3 class="fw-bold mb-3" style="color: var(--proven-navy);">Ready to build your verified profile?</h3>
+            <a href="{{ url_for('auth.signup') }}" class="btn btn-proven-primary btn-lg">Get Started Free</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

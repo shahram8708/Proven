@@ -1,0 +1,5 @@
+{% macro skill_tag(name, count=None, dimension=None) %}
+<span class="skill-tag{% if dimension %} skill-{{ dimension }}{% endif %}">
+    {{ name }}{% if count %} <small class="ms-1 opacity-75">({{ count }})</small>{% endif %}
+</span>
+{% endmacro %}

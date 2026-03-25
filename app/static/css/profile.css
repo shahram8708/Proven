@@ -1,0 +1,198 @@
+/* ========================================
+   Proven — Public Profile Styles
+   ======================================== */
+
+/* --- Profile Header --- */
+.profile-header {
+    background: linear-gradient(135deg, var(--proven-navy) 0%, #1a3a7a 100%);
+    color: white;
+    padding: 48px 0 32px;
+    margin-top: -24px;
+}
+.profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--proven-teal);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 2.5rem;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+}
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+    margin: 0;
+}
+.profile-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+}
+.profile-location {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+}
+
+/* --- Profile Stats Row --- */
+.profile-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 16px;
+}
+.profile-stat {
+    text-align: center;
+}
+.profile-stat-number {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+}
+.profile-stat-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Profile Body --- */
+.profile-body {
+    padding: 32px 0;
+}
+.profile-section {
+    margin-bottom: 32px;
+}
+.profile-section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--proven-navy);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--proven-border);
+}
+
+/* --- Radar Chart Container --- */
+.radar-chart-container {
+    max-width: 320px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* --- Skills by Dimension --- */
+.skill-dimension {
+    margin-bottom: 20px;
+}
+.skill-dimension-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.skill-dimension-name {
+    font-weight: 600;
+    color: var(--proven-navy);
+    font-size: 0.9rem;
+}
+.skill-dimension-count {
+    font-size: 0.75rem;
+    color: var(--proven-text-muted);
+}
+.skill-dimension-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* --- Evidence Portfolio --- */
+.evidence-portfolio {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+/* --- Challenge Results --- */
+.challenge-result-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius);
+    margin-bottom: 8px;
+}
+.challenge-result-score {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.challenge-result-info {
+    flex: 1;
+}
+.challenge-result-title {
+    font-weight: 600;
+    color: var(--proven-navy);
+    font-size: 0.9rem;
+}
+.challenge-result-meta {
+    font-size: 0.8rem;
+    color: var(--proven-text-muted);
+}
+
+/* --- Contact Button --- */
+.profile-contact-btn {
+    background: var(--proven-amber);
+    color: var(--proven-navy);
+    border: none;
+    padding: 10px 28px;
+    border-radius: var(--proven-radius);
+    font-weight: 700;
+    transition: var(--proven-transition);
+}
+.profile-contact-btn:hover {
+    background: var(--proven-amber-light);
+    color: var(--proven-navy);
+    transform: translateY(-1px);
+}
+
+/* --- Profile Links --- */
+.profile-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+.profile-links a {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2rem;
+    transition: var(--proven-transition);
+}
+.profile-links a:hover {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .profile-stats {
+        gap: 20px;
+    }
+    .profile-avatar {
+        width: 72px;
+        height: 72px;
+        font-size: 1.8rem;
+    }
+    .profile-name {
+        font-size: 1.4rem;
+    }
+    .evidence-portfolio {
+        grid-template-columns: 1fr;
+    }
+}

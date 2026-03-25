@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<article class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <a href="{{ url_for('main.blog_index') }}" class="text-decoration-none text-muted d-inline-block mb-3"><i class="fas fa-arrow-left me-1"></i> Back to Blog</a>
+                <h1 class="fw-bold mb-3" style="color: var(--proven-navy);">{{ post.title }}</h1>
+                <div class="d-flex gap-3 text-muted mb-4">
+                    <span><i class="fas fa-calendar me-1"></i>{{ post.date }}</span>
+                    <span><i class="fas fa-clock me-1"></i>{{ post.read_time }} min read</span>
+                    <span class="badge bg-primary">{{ post.category }}</span>
+                </div>
+                <hr>
+                <div class="blog-content mt-4">
+                    {{ post.content | safe }}
+                </div>
+                <hr class="my-5">
+                <div class="text-center">
+                    <h5 class="fw-bold mb-3">Ready to build your evidence profile?</h5>
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-proven-primary">Get Started Free</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "employer_base.html" %}
+{% block title %}Employer Dashboard{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0" style="color: var(--proven-navy);">Dashboard</h3>
+    <a href="{{ url_for('discover.discover_index') }}" class="btn btn-proven-primary"><i class="fas fa-search me-1"></i> Find Talent</a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-navy);">{{ employer_account.contact_credits_remaining if employer_account else 0 }}</p>
+                <h6 class="fw-bold mb-0">Contact Credits</h6>
+                <small class="text-muted">remaining this month</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-teal);">{{ talent_lists | length }}</p>
+                <h6 class="fw-bold mb-0">Talent Lists</h6>
+                <small class="text-muted">active lists</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                {% set total_pipeline = 0 %}
+                {% for tl in talent_lists %}{% set total_pipeline = total_pipeline + tl.members | length %}{% endfor %}
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-amber);">{{ total_pipeline }}</p>
+                <h6 class="fw-bold mb-0">Pipeline Candidates</h6>
+                <small class="text-muted">across all lists</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-navy);">{{ recent_contacts | length }}</p>
+                <h6 class="fw-bold mb-0">Recent Contacts</h6>
+                <small class="text-muted">requests sent</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">Subscription</h6>
+                {% if employer_account and employer_account.subscription_tier %}
+                    <span class="badge bg-success mb-2">{{ employer_account.subscription_tier | title }}</span>
+                    <p class="text-muted small mb-0">Active since {{ employer_account.subscription_start.strftime('%b %d, %Y') if employer_account.subscription_start else 'N/A' }}</p>
+                {% else %}
+                    <span class="badge bg-secondary mb-2">Free</span>
+                    <p class="text-muted small mb-2">Upgrade to search and contact verified talent.</p>
+                    <a href="{{ url_for('main.pricing') }}" class="btn btn-sm btn-outline-primary">View Plans</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">Company Profile</h6>
+                {% if employer_account %}
+                    <p class="mb-1"><strong>{{ employer_account.company_name or 'Not set' }}</strong></p>
+                    <p class="text-muted small mb-0">{{ employer_account.company_description or 'Add a company description to attract talent.' }}</p>
+                {% else %}
+                    <p class="text-muted small">Complete your company profile to start hiring.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Talent Lists</h5>
+                <a href="{{ url_for('discover.talent_lists') }}" class="btn btn-sm btn-outline-primary">Manage Lists</a>
+            </div>
+            <div class="card-body">
+                {% if talent_lists %}
+                    {% for tl in talent_lists[:5] %}
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div>
+                            <strong>{{ tl.name }}</strong>
+                            <small class="text-muted d-block">{{ tl.members | length }} candidate{{ 's' if tl.members | length != 1 }}</small>
+                        </div>
+                        <a href="{{ url_for('discover.talent_lists') }}" class="btn btn-sm btn-outline-secondary">View</a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-list fa-3x text-muted mb-3"></i>
+                        <h6>No talent lists yet</h6>
+                        <p class="text-muted small">Start discovering talent and save them to organized lists.</p>
+                        <a href="{{ url_for('discover.discover_index') }}" class="btn btn-proven-primary btn-sm">Discover Talent</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+                <h5 class="fw-bold mb-0">Recent Contacts</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_contacts %}
+                    {% for contact in recent_contacts[:5] %}
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                        <div>
+                            <small class="fw-semibold">{{ contact.talent.full_name or contact.talent.username }}</small>
+                            <small class="text-muted d-block">{{ contact.created_at | time_ago }}</small>
+                        </div>
+                        <span class="badge {% if contact.status == 'accepted' %}bg-success{% elif contact.status == 'pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ contact.status | title }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted small mb-0">No contacts yet. Search for talent to get started.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

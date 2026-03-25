@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="d-flex">
+    <div class="sidebar bg-white border-end d-none d-lg-block" style="width: 250px; min-height: calc(100vh - 60px);">
+        <div class="p-3">
+            <div class="text-center mb-4 pt-3">
+                <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <span class="text-white fw-bold fs-4">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</span>
+                </div>
+                <h6 class="mt-2 mb-0">{{ current_user.full_name }}</h6>
+                <small class="text-muted">{{ current_user.primary_domain or 'Professional' }}</small>
+            </div>
+            <nav class="nav flex-column">
+                <a class="nav-link sidebar-link" href="{{ url_for('talent_dashboard.talent_dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('evidence.new_evidence') }}"><i class="fas fa-plus-circle me-2"></i>Submit Evidence</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('profile.public_profile', username=current_user.username) }}"><i class="fas fa-user me-2"></i>My Profile</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('main.challenges_public') }}"><i class="fas fa-trophy me-2"></i>Challenges</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('profile.edit_profile') }}"><i class="fas fa-pen me-2"></i>Edit Profile</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('settings.account_settings') }}"><i class="fas fa-cog me-2"></i>Settings</a>
+                <a class="nav-link sidebar-link" href="{{ url_for('settings.billing_overview') }}"><i class="fas fa-credit-card me-2"></i>Billing</a>
+            </nav>
+        </div>
+    </div>
+    <div class="flex-grow-1 p-4">
+        {% block dashboard_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

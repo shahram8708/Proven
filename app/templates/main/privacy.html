@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="fw-bold mb-2" style="color: var(--proven-navy);">Privacy Policy</h1>
+                <p class="text-muted mb-4">Last updated: January 2025</p>
+
+                <h5 class="fw-bold mt-4">1. Information We Collect</h5>
+                <p class="text-muted">We collect information you provide directly: name, email, professional details, evidence submissions, and verification responses. We also collect usage data such as pages visited and interactions with features.</p>
+
+                <h5 class="fw-bold mt-4">2. How We Use Your Information</h5>
+                <p class="text-muted">We use your information to provide the Proven platform, including displaying your professional evidence profile, facilitating verification requests, powering AI skill extraction, and enabling employer discovery of talent.</p>
+
+                <h5 class="fw-bold mt-4">3. Information Sharing</h5>
+                <p class="text-muted">Your published evidence and public profile are visible to registered employers. Verification requests share relevant evidence details with verifiers. We do not sell your personal information to third parties. Employer notes on candidates are private to that employer.</p>
+
+                <h5 class="fw-bold mt-4">4. AI Processing</h5>
+                <p class="text-muted">We use Google Gemini AI to extract skills from your evidence, score evidence quality, detect potential fraud, and evaluate challenge submissions. Your evidence text is processed by AI but is not used to train AI models.</p>
+
+                <h5 class="fw-bold mt-4">5. Data Storage</h5>
+                <p class="text-muted">Your data is stored securely in our databases. Files you upload are stored in encrypted AWS S3 buckets. We retain your data as long as your account is active.</p>
+
+                <h5 class="fw-bold mt-4">6. Payments</h5>
+                <p class="text-muted">Payment processing is handled by Razorpay. We store your Razorpay customer ID and subscription details but do not store credit card numbers or bank account information directly.</p>
+
+                <h5 class="fw-bold mt-4">7. Cookies</h5>
+                <p class="text-muted">We use session cookies for authentication and preference storage. We do not use third-party advertising cookies.</p>
+
+                <h5 class="fw-bold mt-4">8. Your Rights</h5>
+                <p class="text-muted">You can access, update, or delete your personal information through your account settings. You can delete your account at any time, which will remove your profile from employer search results.</p>
+
+                <h5 class="fw-bold mt-4">9. Security</h5>
+                <p class="text-muted">We implement industry-standard security measures including password hashing, CSRF protection, rate limiting, and encrypted data transmission. We use multi-layer fraud detection to protect the integrity of the platform.</p>
+
+                <h5 class="fw-bold mt-4">10. Contact</h5>
+                <p class="text-muted">For privacy-related inquiries, contact us at privacy@getproven.in or through our <a href="{{ url_for('main.contact') }}">contact page</a>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

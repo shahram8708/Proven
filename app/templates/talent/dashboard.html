@@ -1,0 +1,191 @@
+{% extends "talent_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0" style="color: var(--proven-navy);">Dashboard</h3>
+    <a href="{{ url_for('evidence.new_evidence') }}" class="btn btn-proven-primary"><i class="fas fa-plus me-1"></i> New Evidence</a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-2">
+                    <svg width="80" height="80" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="35" fill="none" stroke="#e9ecef" stroke-width="6"/>
+                        <circle cx="40" cy="40" r="35" fill="none" stroke="{% if profile_strength >= 70 %}var(--proven-teal){% elif profile_strength >= 40 %}var(--proven-amber){% else %}#dc3545{% endif %}" stroke-width="6"
+                            stroke-dasharray="{{ (profile_strength / 100) * 220 }} 220"
+                            stroke-linecap="round" transform="rotate(-90 40 40)"/>
+                        <text x="40" y="45" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--proven-navy)">{{ profile_strength }}</text>
+                    </svg>
+                </div>
+                <h6 class="fw-bold mb-0">Profile Strength</h6>
+                <small class="text-muted">
+                    {% if profile_strength >= 70 %}Strong{% elif profile_strength >= 40 %}Building{% else %}Getting Started{% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-navy);">{{ published_evidence | length }}</p>
+                <h6 class="fw-bold mb-0">Published Evidence</h6>
+                <small class="text-muted">{{ drafts | length }} draft{{ 's' if drafts | length != 1 }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                {% set verified = verifications | selectattr('status', 'equalto', 'confirmed') | list %}
+                {% set total_v = verifications | length %}
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-teal);">{{ ((verified | length / total_v * 100) if total_v > 0 else 0) | round | int }}%</p>
+                <h6 class="fw-bold mb-0">Verification Rate</h6>
+                <small class="text-muted">{{ verified | length }}/{{ total_v }} verified</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-amber);">{{ skills | length }}</p>
+                <h6 class="fw-bold mb-0">Verified Skills</h6>
+                <small class="text-muted">{{ challenge_submissions | length }} challenge{{ 's' if challenge_submissions | length != 1 }} taken</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if skills %}
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">Skill Radar</h5>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <canvas id="dashboardRadar" height="250"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h6 class="fw-semibold mb-3">Top Skills</h6>
+                {% for skill in skills[:8] %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>{{ skill.skill.name if skill.skill else skill.skill_name }}</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="progress" style="width:100px;height:6px;">
+                            <div class="progress-bar" style="width:{{ (skill.skill_strength * 100) | round }}%; background: var(--proven-teal);"></div>
+                        </div>
+                        <small class="text-muted">{{ (skill.skill_strength * 100) | round | int }}%</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Recent Evidence</h5>
+                <a href="{{ url_for('evidence.new_evidence') }}" class="btn btn-sm btn-outline-primary">Add New</a>
+            </div>
+            <div class="card-body">
+                {% if published_evidence %}
+                    {% from 'components/evidence_card.html' import evidence_card %}
+                    {% for ev in published_evidence[:5] %}
+                        {{ evidence_card(ev) }}
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                        <h6>No evidence submitted yet</h6>
+                        <p class="text-muted small">Start by documenting a recent project or accomplishment.</p>
+                        <a href="{{ url_for('evidence.new_evidence') }}" class="btn btn-proven-primary btn-sm">Submit Your First Evidence</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0">
+                <h6 class="fw-bold mb-0">Pending Verifications</h6>
+            </div>
+            <div class="card-body">
+                {% set pending = verifications | selectattr('status', 'equalto', 'pending') | list %}
+                {% if pending %}
+                    {% for v in pending[:5] %}
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                        <div>
+                            <small class="d-block">{{ v.verifier_name }}</small>
+                            <small class="text-muted">{{ v.evidence.title[:30] }}...</small>
+                        </div>
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted small mb-0">No pending verifications.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if drafts %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+                <h6 class="fw-bold mb-0">Drafts</h6>
+            </div>
+            <div class="card-body">
+                {% for d in drafts[:5] %}
+                <div class="mb-2 pb-2 border-bottom">
+                    <a href="{{ url_for('evidence.evidence_edit', id=d.id) }}" class="text-decoration-none">
+                        <small class="fw-semibold">{{ d.title or 'Untitled Draft' }}</small>
+                    </a>
+                    <small class="text-muted d-block">{{ (d.submitted_at or d.created_at) | time_ago }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if skills %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dimensions = {};
+    {% for skill in skills %}
+    const dim = '{{ skill.skill.dimension if skill.skill else "Technical" }}';
+    if (!dimensions[dim]) dimensions[dim] = [];
+    dimensions[dim].push({{ skill.skill_strength }});
+    {% endfor %}
+    const labels = Object.keys(dimensions);
+    const data = labels.map(d => {
+        const vals = dimensions[d];
+        return Math.round((vals.reduce((a,b) => a+b, 0) / vals.length) * 100);
+    });
+    new Chart(document.getElementById('dashboardRadar'), {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Skill Strength',
+                data: data,
+                borderColor: '#0f6f5e',
+                backgroundColor: 'rgba(15,111,94,0.15)',
+                pointBackgroundColor: '#0f6f5e',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

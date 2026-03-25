@@ -1,0 +1,120 @@
+{% extends "employer_base.html" %}
+{% block title %}Discover Talent{% endblock %}
+{% block extra_css %}
+<style>
+.filter-panel { position: sticky; top: 80px; }
+.talent-result { transition: box-shadow 0.2s; cursor: pointer; }
+.talent-result:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.profile-drawer-overlay { position: fixed; top: 0; right: 0; width: 500px; height: 100vh; background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 1050; transform: translateX(100%); transition: transform 0.3s; overflow-y: auto; }
+.profile-drawer-overlay.open { transform: translateX(0); }
+.drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1040; display: none; }
+.drawer-backdrop.open { display: block; }
+</style>
+{% endblock %}
+{% block dashboard_content %}
+<h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Discover Talent</h3>
+
+<div class="row g-4">
+    <div class="col-lg-3">
+        <div class="filter-panel">
+            <form id="searchFilters" method="GET" action="{{ url_for('discover.discover_index') }}">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Filters</h6>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Domain</label>
+                            {{ form.domain(class="form-select form-select-sm") }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Skills</label>
+                            {{ form.skills(class="form-control form-control-sm", placeholder="React, Leadership, ...") }}
+                            <small class="text-muted">Comma-separated, AND logic</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Min Verification Rate</label>
+                            {{ form.min_verification_rate(class="form-select form-select-sm") }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Min Evidence Count</label>
+                            {{ form.min_evidence_count(class="form-control form-control-sm", type="number", min=0) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Region</label>
+                            {{ form.region(class="form-control form-control-sm", placeholder="e.g. Bangalore") }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Experience Level</label>
+                            {{ form.experience_level(class="form-select form-select-sm") }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Keyword</label>
+                            {{ form.keyword(class="form-control form-control-sm", placeholder="Search evidence...") }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Sort By</label>
+                            {{ form.sort_by(class="form-select form-select-sm") }}
+                        </div>
+
+                        <button type="submit" class="btn btn-proven-primary btn-sm w-100">Search</button>
+                        <a href="{{ url_for('discover.discover_index') }}" class="btn btn-outline-secondary btn-sm w-100 mt-2">Reset</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <small class="text-muted">{{ pagination.total if pagination else 0 }} results found</small>
+        </div>
+
+        <div id="searchResults">
+            {% if talents %}
+                {% from 'components/talent_card.html' import talent_card %}
+                {% for talent in talents %}
+                    <div class="talent-result mb-3" onclick="openProfileDrawer({{ talent.id }})">
+                        {{ talent_card(talent) }}
+                    </div>
+                {% endfor %}
+
+                {% if pagination %}
+                    {% from 'components/pagination.html' import pagination_widget %}
+                    {{ pagination_widget(pagination, 'discover.discover_index', pagination_params) }}
+                {% endif %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5>No talent found</h5>
+                    <p class="text-muted">Try adjusting your filters or broadening your search criteria.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeProfileDrawer()"></div>
+<div class="profile-drawer-overlay" id="profileDrawer">
+    <div class="p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0" id="drawerName">Loading...</h5>
+            <button class="btn btn-sm btn-outline-secondary" onclick="closeProfileDrawer()"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="drawerContent">
+            <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/discover_filters.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile_drawer.js') }}"></script>
+{% endblock %}

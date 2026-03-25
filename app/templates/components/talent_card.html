@@ -1,0 +1,39 @@
+{% macro talent_card(user, evidence_count=0, challenge_count=0, top_skills=None) %}
+<div class="talent-card verified-{{ user.profile_strength|verification_color }}" data-user-id="{{ user.id }}" onclick="openProfileDrawer({{ user.id }})">
+    <div class="d-flex align-items-start gap-3">
+        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 50px; height: 50px;">
+            {% if user.profile_photo_url %}
+                <img src="{{ user.profile_photo_url }}" class="rounded-circle" width="50" height="50" alt="">
+            {% else %}
+                <span class="text-white fw-bold">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+            {% endif %}
+        </div>
+        <div class="flex-grow-1">
+            <h6 class="mb-0">{{ user.full_name }}</h6>
+            <span class="badge bg-light text-dark">{{ user.primary_domain or 'Professional' }}</span>
+            {% if user.location_country %}
+                <small class="text-muted ms-1"><i class="fas fa-map-marker-alt"></i> {{ user.location_country }}</small>
+            {% endif %}
+        </div>
+        <div class="text-end">
+            <span class="verification-score-badge {{ user.profile_strength|verification_color }} small">
+                <i class="fas fa-shield-alt"></i> {{ user.profile_strength|round(0)|int }}
+            </span>
+        </div>
+    </div>
+    {% if user.professional_summary %}
+        <p class="text-muted small mt-2 mb-2">{{ user.professional_summary[:120] }}{% if user.professional_summary|length > 120 %}...{% endif %}</p>
+    {% endif %}
+    <div class="d-flex gap-3 mt-2">
+        <small class="text-muted"><i class="fas fa-file-alt"></i> {{ evidence_count }} evidence</small>
+        <small class="text-muted"><i class="fas fa-trophy"></i> {{ challenge_count }} challenges</small>
+    </div>
+    {% if top_skills %}
+        <div class="mt-2">
+            {% for skill in top_skills[:3] %}
+                <span class="skill-tag small">{{ skill.skill.name if skill.skill else '' }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endmacro %}

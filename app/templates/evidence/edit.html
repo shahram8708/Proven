@@ -1,0 +1,111 @@
+{% extends "talent_base.html" %}
+{% block title %}Edit Evidence{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+    <a href="{{ url_for('evidence.evidence_detail', id=evidence.id) }}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-1"></i> Back to Evidence</a>
+</div>
+
+<h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Edit Evidence</h3>
+
+<form method="POST" action="{{ url_for('evidence.evidence_edit', id=evidence.id) }}" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Title</label>
+                        {{ form.title(class="form-control", value=evidence.title) }}
+                        {% for error in form.title.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Evidence Type</label>
+                        {{ form.evidence_type(class="form-select") }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Project Context</h5>
+                    {{ form.situation_text(class="form-control", rows="5") }}
+                    {% for error in form.situation_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Challenge Faced</h5>
+                    {{ form.approach_text(class="form-control", rows="5") }}
+                    {% for error in form.approach_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Approach & Execution</h5>
+                    {{ form.decisions_text(class="form-control", rows="5") }}
+                    {% for error in form.decisions_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Key Decisions & Trade-offs</h5>
+                    {{ form.outcome_text(class="form-control", rows="5") }}
+                    {% for error in form.outcome_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Skills & Outcomes</h5>
+                    {{ form.skills_text(class="form-control", rows="5") }}
+                    {% for error in form.skills_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Lessons & Reflection</h5>
+                    {{ form.reflection_text(class="form-control", rows="5") }}
+                    {% for error in form.reflection_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-proven-primary">Save Changes</button>
+                <a href="{{ url_for('evidence.evidence_detail', id=evidence.id) }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Status</h6>
+                    {% if evidence.status == 'published' %}
+                        <span class="badge bg-success">Published</span>
+                        <p class="text-muted small mt-2 mb-0">Changes will be visible immediately after saving.</p>
+                    {% else %}
+                        <span class="badge bg-secondary">Draft</span>
+                        <p class="text-muted small mt-2 mb-0">Save and publish when ready.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if evidence.files %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Existing Files</h6>
+                    {% for f in evidence.files %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small><i class="fas fa-file me-1"></i>{{ f.original_filename }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% endblock %}

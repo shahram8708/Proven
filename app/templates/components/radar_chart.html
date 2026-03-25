@@ -1,0 +1,11 @@
+{% macro radar_chart(canvas_id, capability_data) %}
+<div class="radar-chart-container">
+    <canvas id="{{ canvas_id }}" width="300" height="300"></canvas>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const radarData = {{ capability_data | tojson | safe }};
+    initCapabilityRadar('{{ canvas_id }}', radarData);
+});
+</script>
+{% endmacro %}

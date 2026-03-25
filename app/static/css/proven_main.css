@@ -1,0 +1,379 @@
+/* ========================================
+   Proven — Main Design System
+   ======================================== */
+
+/* --- CSS Variables --- */
+:root {
+    --proven-navy: #0f214f;
+    --proven-navy-light: #1a3a7a;
+    --proven-teal: #0f6f5e;
+    --proven-teal-light: #12957d;
+    --proven-amber: #d4a843;
+    --proven-amber-light: #e6c36a;
+    --proven-bg: #f6f8fa;
+    --proven-white: #ffffff;
+    --proven-text: #333333;
+    --proven-text-muted: #6c757d;
+    --proven-border: #e2e8f0;
+    --proven-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --proven-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --proven-radius: 8px;
+    --proven-radius-lg: 12px;
+    --proven-transition: all 0.2s ease;
+}
+
+/* --- Typography --- */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--proven-text);
+    background: var(--proven-bg);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--proven-navy);
+    font-weight: 700;
+}
+
+.text-proven-navy { color: var(--proven-navy) !important; }
+.text-proven-teal { color: var(--proven-teal) !important; }
+.text-proven-amber { color: var(--proven-amber) !important; }
+.bg-proven-navy { background-color: var(--proven-navy) !important; }
+.bg-proven-teal { background-color: var(--proven-teal) !important; }
+.bg-proven-amber { background-color: var(--proven-amber) !important; }
+.bg-proven-light { background-color: var(--proven-bg) !important; }
+
+/* --- Buttons --- */
+.btn-proven-primary {
+    background: var(--proven-navy);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--proven-radius);
+    font-weight: 600;
+    transition: var(--proven-transition);
+}
+.btn-proven-primary:hover {
+    background: var(--proven-navy-light);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--proven-shadow);
+}
+
+.btn-proven-secondary {
+    background: var(--proven-teal);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--proven-radius);
+    font-weight: 600;
+    transition: var(--proven-transition);
+}
+.btn-proven-secondary:hover {
+    background: var(--proven-teal-light);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-proven-outline {
+    background: transparent;
+    color: var(--proven-navy);
+    border: 2px solid var(--proven-navy);
+    padding: 8px 22px;
+    border-radius: var(--proven-radius);
+    font-weight: 600;
+    transition: var(--proven-transition);
+}
+.btn-proven-outline:hover {
+    background: var(--proven-navy);
+    color: white;
+}
+
+.btn-proven-amber {
+    background: var(--proven-amber);
+    color: var(--proven-navy);
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--proven-radius);
+    font-weight: 600;
+    transition: var(--proven-transition);
+}
+.btn-proven-amber:hover {
+    background: var(--proven-amber-light);
+    transform: translateY(-1px);
+}
+
+/* --- Cards --- */
+.proven-card {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius-lg);
+    padding: 24px;
+    box-shadow: var(--proven-shadow);
+    transition: var(--proven-transition);
+}
+.proven-card:hover {
+    box-shadow: var(--proven-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.proven-card-flat {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius);
+    padding: 20px;
+}
+
+/* --- Navbar --- */
+.navbar-proven {
+    background: var(--proven-white);
+    border-bottom: 1px solid var(--proven-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    padding: 12px 0;
+}
+.navbar-proven .navbar-brand {
+    font-weight: 800;
+    color: var(--proven-navy);
+    font-size: 1.4rem;
+}
+.navbar-proven .nav-link {
+    color: var(--proven-text);
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: var(--proven-transition);
+}
+.navbar-proven .nav-link:hover,
+.navbar-proven .nav-link.active {
+    color: var(--proven-teal);
+}
+
+.navbar-scrolled {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Forms --- */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--proven-teal);
+    box-shadow: 0 0 0 0.2rem rgba(15, 111, 94, 0.15);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--proven-navy);
+    margin-bottom: 6px;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    background: linear-gradient(135deg, var(--proven-navy) 0%, #1a3a7a 100%);
+    color: white;
+    padding: 100px 0 80px;
+}
+.hero-section h1 {
+    color: white;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+.hero-section .lead {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* --- Section Spacing --- */
+.proven-section {
+    padding: 80px 0;
+}
+.proven-section-sm {
+    padding: 48px 0;
+}
+
+/* --- Stats --- */
+.stat-card {
+    text-align: center;
+    padding: 24px;
+}
+.stat-card .stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--proven-navy);
+    line-height: 1;
+}
+.stat-card .stat-label {
+    color: var(--proven-text-muted);
+    font-size: 0.875rem;
+    margin-top: 4px;
+}
+
+/* --- Badges --- */
+.badge-proven {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.badge-verified {
+    background: rgba(15, 111, 94, 0.1);
+    color: var(--proven-teal);
+}
+.badge-pending {
+    background: rgba(212, 168, 67, 0.1);
+    color: var(--proven-amber);
+}
+.badge-draft {
+    background: rgba(108, 117, 125, 0.1);
+    color: var(--proven-text-muted);
+}
+.badge-published {
+    background: rgba(15, 33, 79, 0.1);
+    color: var(--proven-navy);
+}
+
+/* --- Score Display --- */
+.score-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+.score-high { background: rgba(15, 111, 94, 0.1); color: var(--proven-teal); }
+.score-medium { background: rgba(212, 168, 67, 0.1); color: var(--proven-amber); }
+.score-low { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+
+/* --- Steps --- */
+.step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+}
+.step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: var(--proven-border);
+    color: var(--proven-text-muted);
+    transition: var(--proven-transition);
+}
+.step-dot.active {
+    background: var(--proven-teal);
+    color: white;
+}
+.step-dot.completed {
+    background: var(--proven-navy);
+    color: white;
+}
+.step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--proven-border);
+}
+.step-line.completed {
+    background: var(--proven-navy);
+}
+
+/* --- Alerts --- */
+.alert-proven {
+    border-radius: var(--proven-radius);
+    border: none;
+    padding: 16px 20px;
+}
+
+/* --- Footer --- */
+.footer-proven {
+    background: var(--proven-navy);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 48px 0 24px;
+}
+.footer-proven h6 {
+    color: white;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+.footer-proven a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--proven-transition);
+}
+.footer-proven a:hover {
+    color: white;
+}
+
+/* --- Pricing --- */
+.pricing-card {
+    border-radius: var(--proven-radius-lg);
+    padding: 32px;
+    text-align: center;
+    transition: var(--proven-transition);
+}
+.pricing-card.featured {
+    border: 2px solid var(--proven-teal);
+    transform: scale(1.03);
+}
+.pricing-amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--proven-navy);
+}
+.pricing-period {
+    color: var(--proven-text-muted);
+    font-size: 0.875rem;
+}
+
+/* --- Misc --- */
+.divider {
+    border: none;
+    border-top: 1px solid var(--proven-border);
+    margin: 24px 0;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--proven-teal);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.avatar-circle-lg {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+}
+
+.truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hover-lift {
+    transition: var(--proven-transition);
+}
+.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--proven-shadow-lg);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .hero-section { padding: 60px 0 48px; }
+    .hero-section h1 { font-size: 2rem; }
+    .proven-section { padding: 48px 0; }
+    .pricing-card.featured { transform: scale(1); }
+}

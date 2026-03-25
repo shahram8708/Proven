@@ -1,0 +1,193 @@
+/* ========================================
+   Proven — Discover / Search Styles
+   ======================================== */
+
+/* --- 3-Column Layout --- */
+.discover-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    min-height: calc(100vh - 80px);
+}
+
+/* --- Filter Panel --- */
+.filter-panel {
+    position: sticky;
+    top: 80px;
+    height: fit-content;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius-lg);
+    padding: 20px;
+}
+.filter-panel::-webkit-scrollbar {
+    width: 4px;
+}
+.filter-panel::-webkit-scrollbar-thumb {
+    background: var(--proven-border);
+    border-radius: 2px;
+}
+.filter-section {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--proven-border);
+}
+.filter-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.filter-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--proven-navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+.filter-panel .form-control,
+.filter-panel .form-select {
+    font-size: 0.875rem;
+    padding: 6px 10px;
+}
+
+/* --- Results Grid --- */
+.results-container {
+    padding: 0;
+}
+.results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.results-count {
+    font-size: 0.875rem;
+    color: var(--proven-text-muted);
+}
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+/* --- Profile Drawer --- */
+.profile-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1040;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.profile-drawer-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.profile-drawer {
+    position: fixed;
+    top: 0;
+    right: -480px;
+    width: 480px;
+    max-width: 90vw;
+    height: 100vh;
+    background: var(--proven-white);
+    z-index: 1050;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    transition: right 0.3s ease;
+    overflow-y: auto;
+}
+.profile-drawer.active {
+    right: 0;
+}
+.profile-drawer-header {
+    position: sticky;
+    top: 0;
+    background: var(--proven-navy);
+    color: white;
+    padding: 24px;
+    z-index: 1;
+}
+.profile-drawer-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--proven-transition);
+}
+.profile-drawer-close:hover {
+    color: white;
+}
+.profile-drawer-body {
+    padding: 24px;
+}
+.profile-drawer-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--proven-white);
+    border-top: 1px solid var(--proven-border);
+    padding: 16px 24px;
+    display: flex;
+    gap: 8px;
+}
+
+/* --- Drawer Loading --- */
+.drawer-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--proven-text-muted);
+}
+
+/* --- Active Filters --- */
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+.active-filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(15, 111, 94, 0.08);
+    color: var(--proven-teal);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.active-filter-tag .remove-filter {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: var(--proven-transition);
+}
+.active-filter-tag .remove-filter:hover {
+    opacity: 1;
+}
+
+@media (max-width: 992px) {
+    .discover-layout {
+        grid-template-columns: 1fr;
+    }
+    .filter-panel {
+        position: static;
+        max-height: none;
+    }
+    .profile-drawer {
+        width: 100%;
+        right: -100%;
+    }
+}

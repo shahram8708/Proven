@@ -1,0 +1,122 @@
+{% extends "employer_base.html" %}
+{% block title %}Post Sponsored Challenge{% endblock %}
+{% block dashboard_content %}
+<h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Post Sponsored Challenge</h3>
+
+<form method="POST" action="{{ url_for('challenges.post_sponsored_challenge') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Challenge Details</h5>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Title</label>
+                        <input type="text" name="title" class="form-control" required maxlength="200" placeholder="e.g. Design a Notification System for 10M Users">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea name="description" class="form-control" rows="3" required maxlength="1000" placeholder="Brief overview of the challenge..."></textarea>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Domain</label>
+                            <select name="domain" class="form-select" required>
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Product Management">Product Management</option>
+                                <option value="Design">Design</option>
+                                <option value="Marketing">Marketing</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Difficulty</label>
+                            <select name="difficulty" class="form-select" required>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate" selected>Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Time Limit (min)</label>
+                            <input type="number" name="time_limit_minutes" class="form-control" value="60" min="15" max="180" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Challenge Brief</label>
+                        <textarea name="brief" class="form-control" rows="6" required placeholder="Detailed challenge brief. Include the scenario, constraints, and what you want candidates to deliver..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Scoring Rubric</h5>
+                    <p class="text-muted small">Define how submissions will be evaluated by AI. Weights should sum to 100.</p>
+                    <div id="rubricContainer">
+                        <div class="row g-2 mb-2 rubric-row">
+                            <div class="col-md-3"><input type="text" name="rubric_dimension[]" class="form-control form-control-sm" placeholder="Dimension" value="Technical Quality"></div>
+                            <div class="col-md-2"><input type="number" name="rubric_weight[]" class="form-control form-control-sm" placeholder="Weight" value="30" min="0" max="100"></div>
+                            <div class="col-md-6"><input type="text" name="rubric_description[]" class="form-control form-control-sm" placeholder="Description" value="Correctness and depth of technical approach"></div>
+                            <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger remove-rubric"><i class="fas fa-times"></i></button></div>
+                        </div>
+                        <div class="row g-2 mb-2 rubric-row">
+                            <div class="col-md-3"><input type="text" name="rubric_dimension[]" class="form-control form-control-sm" placeholder="Dimension" value="Problem Solving"></div>
+                            <div class="col-md-2"><input type="number" name="rubric_weight[]" class="form-control form-control-sm" placeholder="Weight" value="25" min="0" max="100"></div>
+                            <div class="col-md-6"><input type="text" name="rubric_description[]" class="form-control form-control-sm" placeholder="Description" value="Analytical thinking and creative solutions"></div>
+                            <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger remove-rubric"><i class="fas fa-times"></i></button></div>
+                        </div>
+                        <div class="row g-2 mb-2 rubric-row">
+                            <div class="col-md-3"><input type="text" name="rubric_dimension[]" class="form-control form-control-sm" placeholder="Dimension" value="Communication"></div>
+                            <div class="col-md-2"><input type="number" name="rubric_weight[]" class="form-control form-control-sm" placeholder="Weight" value="25" min="0" max="100"></div>
+                            <div class="col-md-6"><input type="text" name="rubric_description[]" class="form-control form-control-sm" placeholder="Description" value="Clarity of explanation and structure"></div>
+                            <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger remove-rubric"><i class="fas fa-times"></i></button></div>
+                        </div>
+                        <div class="row g-2 mb-2 rubric-row">
+                            <div class="col-md-3"><input type="text" name="rubric_dimension[]" class="form-control form-control-sm" placeholder="Dimension" value="Completeness"></div>
+                            <div class="col-md-2"><input type="number" name="rubric_weight[]" class="form-control form-control-sm" placeholder="Weight" value="20" min="0" max="100"></div>
+                            <div class="col-md-6"><input type="text" name="rubric_description[]" class="form-control form-control-sm" placeholder="Description" value="Coverage of all requirements and edge cases"></div>
+                            <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger remove-rubric"><i class="fas fa-times"></i></button></div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="addRubric"><i class="fas fa-plus me-1"></i> Add Dimension</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-proven-primary btn-lg">Post Challenge</button>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2"><i class="fas fa-info-circle text-primary me-1"></i> About Sponsored Challenges</h6>
+                    <ul class="small text-muted mb-0">
+                        <li class="mb-2">Your company name appears on the challenge</li>
+                        <li class="mb-2">Attract top talent who want to demonstrate skills</li>
+                        <li class="mb-2">AI scores all submissions consistently using your rubric</li>
+                        <li class="mb-2">View all submissions with scores and feedback</li>
+                        <li>Great way to evaluate candidates before contacting them</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('addRubric').addEventListener('click', function() {
+    const container = document.getElementById('rubricContainer');
+    const row = document.createElement('div');
+    row.className = 'row g-2 mb-2 rubric-row';
+    row.innerHTML = '<div class="col-md-3"><input type="text" name="rubric_dimension[]" class="form-control form-control-sm" placeholder="Dimension"></div><div class="col-md-2"><input type="number" name="rubric_weight[]" class="form-control form-control-sm" placeholder="Weight" min="0" max="100"></div><div class="col-md-6"><input type="text" name="rubric_description[]" class="form-control form-control-sm" placeholder="Description"></div><div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger remove-rubric"><i class="fas fa-times"></i></button></div>';
+    container.appendChild(row);
+});
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.remove-rubric')) {
+        e.target.closest('.rubric-row').remove();
+    }
+});
+</script>
+{% endblock %}

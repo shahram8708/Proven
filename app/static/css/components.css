@@ -1,0 +1,293 @@
+/* ========================================
+   Proven — Component Styles
+   ======================================== */
+
+/* --- Evidence Card --- */
+.evidence-card {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius-lg);
+    padding: 20px;
+    transition: var(--proven-transition);
+    position: relative;
+}
+.evidence-card:hover {
+    box-shadow: var(--proven-shadow-lg);
+    transform: translateY(-2px);
+}
+.evidence-card .evidence-type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--proven-teal);
+}
+.evidence-card .evidence-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--proven-navy);
+    margin: 8px 0;
+}
+.evidence-card .evidence-meta {
+    color: var(--proven-text-muted);
+    font-size: 0.85rem;
+}
+.evidence-card .evidence-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 12px;
+}
+.evidence-card .verification-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--proven-teal);
+    font-weight: 600;
+}
+.evidence-card .quality-indicator {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+/* --- Skill Tag --- */
+.skill-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--proven-bg);
+    color: var(--proven-text);
+    border: 1px solid var(--proven-border);
+    transition: var(--proven-transition);
+}
+.skill-tag-technical {
+    background: rgba(15, 33, 79, 0.08);
+    color: var(--proven-navy);
+    border-color: rgba(15, 33, 79, 0.15);
+}
+.skill-tag-leadership {
+    background: rgba(15, 111, 94, 0.08);
+    color: var(--proven-teal);
+    border-color: rgba(15, 111, 94, 0.15);
+}
+.skill-tag-strategic {
+    background: rgba(212, 168, 67, 0.08);
+    color: #b8922e;
+    border-color: rgba(212, 168, 67, 0.15);
+}
+.skill-tag-communication {
+    background: rgba(111, 66, 193, 0.08);
+    color: #6f42c1;
+    border-color: rgba(111, 66, 193, 0.15);
+}
+.skill-tag-analytical {
+    background: rgba(220, 53, 69, 0.08);
+    color: #dc3545;
+    border-color: rgba(220, 53, 69, 0.15);
+}
+
+/* --- Verification Badge --- */
+.verification-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.verification-badge-confirmed {
+    background: rgba(15, 111, 94, 0.1);
+    color: var(--proven-teal);
+}
+.verification-badge-qualified {
+    background: rgba(212, 168, 67, 0.1);
+    color: #b8922e;
+}
+.verification-badge-declined {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+.verification-badge-pending {
+    background: rgba(108, 117, 125, 0.1);
+    color: var(--proven-text-muted);
+}
+
+/* --- Score Badge --- */
+.score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+.score-badge-high {
+    background: rgba(15, 111, 94, 0.12);
+    color: var(--proven-teal);
+}
+.score-badge-medium {
+    background: rgba(212, 168, 67, 0.12);
+    color: #b8922e;
+}
+.score-badge-low {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+}
+
+/* --- Talent Card --- */
+.talent-card {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius-lg);
+    padding: 20px;
+    transition: var(--proven-transition);
+    cursor: pointer;
+}
+.talent-card:hover {
+    box-shadow: var(--proven-shadow-lg);
+    border-color: var(--proven-teal);
+}
+.talent-card .talent-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--proven-navy);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+.talent-card .talent-name {
+    font-weight: 700;
+    color: var(--proven-navy);
+}
+.talent-card .talent-title {
+    color: var(--proven-text-muted);
+    font-size: 0.875rem;
+}
+.talent-card .talent-stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+}
+.talent-card .talent-stat {
+    font-size: 0.8rem;
+    color: var(--proven-text-muted);
+}
+.talent-card .talent-stat strong {
+    color: var(--proven-navy);
+}
+
+/* --- Challenge Card --- */
+.challenge-card {
+    background: var(--proven-white);
+    border: 1px solid var(--proven-border);
+    border-radius: var(--proven-radius-lg);
+    padding: 20px;
+    transition: var(--proven-transition);
+}
+.challenge-card:hover {
+    box-shadow: var(--proven-shadow-lg);
+    transform: translateY(-2px);
+}
+.challenge-card .challenge-domain {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--proven-teal);
+}
+.challenge-card .challenge-title {
+    font-weight: 700;
+    color: var(--proven-navy);
+    margin: 6px 0;
+}
+.challenge-card .challenge-meta {
+    font-size: 0.8rem;
+    color: var(--proven-text-muted);
+}
+.challenge-card .challenge-difficulty {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+.difficulty-beginner { background: #d4edda; color: #155724; }
+.difficulty-intermediate { background: #fff3cd; color: #856404; }
+.difficulty-advanced { background: #f8d7da; color: #721c24; }
+
+/* --- Pagination --- */
+.pagination-proven .page-link {
+    color: var(--proven-navy);
+    border-color: var(--proven-border);
+    padding: 8px 14px;
+    font-weight: 500;
+}
+.pagination-proven .page-item.active .page-link {
+    background: var(--proven-navy);
+    border-color: var(--proven-navy);
+    color: white;
+}
+.pagination-proven .page-link:hover {
+    background: var(--proven-bg);
+    color: var(--proven-teal);
+}
+
+/* --- Empty State --- */
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--proven-text-muted);
+}
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.4;
+}
+.empty-state h5 {
+    color: var(--proven-text-muted);
+    margin-bottom: 8px;
+}
+
+/* --- Tips Panel --- */
+.tips-panel {
+    background: rgba(15, 111, 94, 0.05);
+    border: 1px solid rgba(15, 111, 94, 0.15);
+    border-radius: var(--proven-radius);
+    padding: 16px;
+}
+.tips-panel h6 {
+    color: var(--proven-teal);
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+.tips-panel ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.85rem;
+    color: var(--proven-text-muted);
+}
+.tips-panel li {
+    margin-bottom: 4px;
+}
+
+/* --- Progress Bar --- */
+.progress-proven {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--proven-bg);
+}
+.progress-proven .progress-bar {
+    border-radius: 4px;
+    background: var(--proven-teal);
+}

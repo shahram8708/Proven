@@ -1,0 +1,229 @@
+{% extends "talent_base.html" %}
+{% block title %}Submit New Evidence{% endblock %}
+{% block extra_css %}
+<style>
+.evidence-step { display: none; }
+.evidence-step.active { display: block; }
+.step-indicator { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; border: 2px solid #dee2e6; color: #6c757d; }
+.step-indicator.active { border-color: var(--proven-navy); color: var(--proven-navy); background: rgba(15,33,79,0.05); }
+.step-indicator.completed { border-color: var(--proven-teal); color: white; background: var(--proven-teal); }
+.tip-panel { background: #f8f9ff; border-left: 3px solid var(--proven-navy); border-radius: 4px; }
+</style>
+{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0" style="color: var(--proven-navy);">Submit New Evidence</h3>
+    <span class="text-muted" id="autosaveStatus"></span>
+</div>
+
+<div class="d-flex justify-content-center gap-3 mb-4" id="stepIndicators">
+    <div class="text-center">
+        <div class="step-indicator active" data-step="1">1</div>
+        <small class="d-block mt-1 text-muted">Context</small>
+    </div>
+    <div class="text-center">
+        <div class="step-indicator" data-step="2">2</div>
+        <small class="d-block mt-1 text-muted">Challenge</small>
+    </div>
+    <div class="text-center">
+        <div class="step-indicator" data-step="3">3</div>
+        <small class="d-block mt-1 text-muted">Approach</small>
+    </div>
+    <div class="text-center">
+        <div class="step-indicator" data-step="4">4</div>
+        <small class="d-block mt-1 text-muted">Decisions</small>
+    </div>
+    <div class="text-center">
+        <div class="step-indicator" data-step="5">5</div>
+        <small class="d-block mt-1 text-muted">Outcomes</small>
+    </div>
+    <div class="text-center">
+        <div class="step-indicator" data-step="6">6</div>
+        <small class="d-block mt-1 text-muted">Reflection</small>
+    </div>
+</div>
+
+<form method="POST" action="{{ url_for('evidence.new_evidence') }}" enctype="multipart/form-data" id="evidenceForm">
+    {{ form.hidden_tag() }}
+    {% if form.csrf_token.errors %}
+    <div class="alert alert-danger">{{ form.csrf_token.errors[0] }}</div>
+    {% endif %}
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        Please fix the highlighted fields and try again.
+        <ul class="mb-0 mt-2">
+            {% for field_name, field_errors in form.errors.items() if field_name != 'csrf_token' %}
+                {% set field = form[field_name] if field_name in form else None %}
+                <li><strong>{{ field.label.text if field else field_name|capitalize }}</strong>: {{ field_errors[0] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="evidence-step active" data-step="1">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Project Context</h5>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Evidence Title</label>
+                            {{ form.title(class="form-control", placeholder="e.g. Led migration of monolith to microservices architecture") }}
+                            {% for error in form.title.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Evidence Type</label>
+                            {{ form.evidence_type(class="form-select") }}
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Team Size</label>
+                                {{ form.team_size_range(class="form-select") }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Project Scale</label>
+                                {{ form.project_scale(class="form-select") }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Project Context</label>
+                            {{ form.situation_text(class="form-control", rows="6", placeholder="Describe the project background, your role, team size, timeline, and organizational context...") }}
+                            {% for error in form.situation_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Describe the context clearly</small>
+                                <small class="text-muted char-count" data-target="situation_text">0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence-step" data-step="2">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Challenge Faced</h5>
+                        <div class="mb-3">
+                            {{ form.approach_text(class="form-control", rows="6", placeholder="What was the core problem or challenge? What constraints existed? What were the stakes?") }}
+                            {% for error in form.approach_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Be specific about the difficulties</small>
+                                <small class="text-muted char-count" data-target="approach_text">0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence-step" data-step="3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Approach & Execution</h5>
+                        <div class="mb-3">
+                            {{ form.decisions_text(class="form-control", rows="6", placeholder="What strategy did you use? How did you execute it? What tools, methods, or frameworks?") }}
+                            {% for error in form.decisions_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Detail your methodology and actions</small>
+                                <small class="text-muted char-count" data-target="decisions_text">0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence-step" data-step="4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Key Decisions & Trade-offs</h5>
+                        <div class="mb-3">
+                            {{ form.outcome_text(class="form-control", rows="6", placeholder="What critical decisions did you make? What were the alternatives? Why did you choose this path?") }}
+                            {% for error in form.outcome_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Show your decision-making process</small>
+                                <small class="text-muted char-count" data-target="outcome_text">0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence-step" data-step="5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Measurable Outcomes</h5>
+                        <div class="mb-3">
+                            {{ form.skills_text(class="form-control", rows="6", placeholder="What results did you achieve? Use specific numbers, percentages, timeframes. What impact?") }}
+                            {% for error in form.skills_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Include metrics: %, $, time saved, etc.</small>
+                                <small class="text-muted char-count" data-target="skills_text">0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence-step" data-step="6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Lessons & Reflection</h5>
+                        <div class="mb-3">
+                            {{ form.reflection_text(class="form-control", rows="6", placeholder="What did you learn? What would you do differently? How has this shaped your skills?") }}
+                            {% for error in form.reflection_text.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Show growth and self-awareness</small>
+                                <small class="text-muted char-count" data-target="reflection_text">0</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Supporting Files (optional)</label>
+                            <input type="file" id="evidence_files" name="evidence_files" class="form-control" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+                            <small class="text-muted">Max 5MB per file. PDF, DOC, images accepted.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                <button type="button" class="btn btn-outline-secondary" id="prevStep" style="display:none;">Previous</button>
+                <div class="ms-auto d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary" id="saveDraft">Save Draft</button>
+                    <button type="button" class="btn btn-proven-primary" id="nextStep">Next</button>
+                    <button type="submit" class="btn btn-proven-primary" id="submitEvidence" style="display:none;">Submit & Extract Skills</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="tip-panel p-3 mb-3">
+                <h6 class="fw-bold mb-2"><i class="fas fa-lightbulb me-1 text-warning"></i> Tips</h6>
+                <div id="tipContent">
+                    <p class="small text-muted mb-2">For <strong>Project Context</strong>:</p>
+                    <ul class="small text-muted">
+                        <li>Include team size and your specific role</li>
+                        <li>Mention timeline and organizational setting</li>
+                        <li>Set the stage for why this project mattered</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Evidence Quality</h6>
+                    <p class="small text-muted">Your evidence will be scored on:</p>
+                    <div class="mb-2 small">
+                        <div class="d-flex justify-content-between"><span>Completeness</span><span>20pts</span></div>
+                        <div class="d-flex justify-content-between"><span>Specificity</span><span>20pts</span></div>
+                        <div class="d-flex justify-content-between"><span>Measurability</span><span>20pts</span></div>
+                        <div class="d-flex justify-content-between"><span>Verification</span><span>25pts</span></div>
+                        <div class="d-flex justify-content-between"><span>Recency</span><span>10pts</span></div>
+                        <div class="d-flex justify-content-between"><span>Anti-fraud</span><span>5pts</span></div>
+                    </div>
+                    <small class="text-muted">Higher scores = more visibility to employers</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/evidence_form.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "talent_base.html" %}
+{% block title %}Billing{% endblock %}
+{% block dashboard_content %}
+<h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Billing</h3>
+
+<div class="row g-4">
+    <div class="col-lg-3">
+        <div class="list-group list-group-flush">
+            <a href="{{ url_for('settings.account_settings') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-user me-2"></i>Account</a>
+            <a href="{{ url_for('settings.notification_settings') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-bell me-2"></i>Notifications</a>
+            <a href="{{ url_for('settings.billing_overview') }}" class="list-group-item list-group-item-action active border-0"><i class="fas fa-credit-card me-2"></i>Billing</a>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Current Plan</h5>
+                {% if current_user.subscription_tier %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-success fs-6 mb-2">{{ current_user.subscription_tier | title }}</span>
+                            <p class="text-muted small mb-0">
+                                {% if current_user.subscription_end %}
+                                    Active until {{ current_user.subscription_end.strftime('%b %d, %Y') }}
+                                {% else %}
+                                    Active subscription
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            {% if current_user.subscription_tier == 'employer_starter' %}
+                                <span class="fw-bold" style="color:var(--proven-navy);">₹8,299/mo</span>
+                            {% elif current_user.subscription_tier == 'employer_team' %}
+                                <span class="fw-bold" style="color:var(--proven-navy);">₹29,199/mo</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-muted">You're on the <strong>Free</strong> plan.</p>
+                    {% if current_user.account_type == 'employer' %}
+                        <a href="{{ url_for('main.pricing') }}" class="btn btn-proven-primary btn-sm">View Plans</a>
+                    {% else %}
+                        <p class="text-muted small">The talent account is free forever.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if current_user.account_type == 'employer' %}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Contact Credits</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="display-5 fw-bold mb-0" style="color:var(--proven-navy);">{{ current_user.employer_account.contact_credits_remaining if current_user.employer_account else 0 }}</p>
+                        <small class="text-muted">credits remaining this month</small>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted small">Credits reset at the start of each billing cycle. Unused credits do not roll over.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if current_user.razorpay_customer_id %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Payment Details</h5>
+                <p class="text-muted small">Payments are processed securely through Razorpay.</p>
+                <p class="text-muted small mb-0">Razorpay Customer ID: {{ current_user.razorpay_customer_id }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/razorpay_checkout.js') }}"></script>
+{% endblock %}

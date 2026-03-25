@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{{ challenge.title }}{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% set submissions = challenge.submissions.all() %}
+                <a href="{{ url_for('main.challenges_public') }}" class="text-decoration-none text-muted d-inline-block mb-3"><i class="fas fa-arrow-left me-1"></i> All Challenges</a>
+
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex gap-2 mb-2">
+                            <span class="badge bg-primary">{{ challenge.domain }}</span>
+                            <span class="badge bg-info">{{ challenge.challenge_type | replace('_', ' ') | title }}</span>
+                            <span class="badge {% if challenge.difficulty == 'beginner' %}bg-success{% elif challenge.difficulty == 'intermediate' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ challenge.difficulty | title }}</span>
+                        </div>
+                        <h2 class="fw-bold" style="color: var(--proven-navy);">{{ challenge.title }}</h2>
+                        <p class="text-muted">{{ challenge.description }}</p>
+
+                        {% if challenge.sponsor_company %}
+                        <div class="d-flex align-items-center gap-2 mb-3 p-2 bg-light rounded">
+                            <i class="fas fa-building text-primary"></i>
+                            <small>Sponsored by <strong>{{ challenge.sponsor_company }}</strong></small>
+                        </div>
+                        {% endif %}
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-4 text-center">
+                                <i class="fas fa-clock fa-2x text-muted mb-1"></i>
+                                <small class="d-block text-muted">Time Limit</small>
+                                <strong>{{ challenge.time_limit_minutes }} min</strong>
+                            </div>
+                            <div class="col-4 text-center">
+                                <i class="fas fa-users fa-2x text-muted mb-1"></i>
+                                <small class="d-block text-muted">Submissions</small>
+                                <strong>{{ submissions | length }}</strong>
+                            </div>
+                            <div class="col-4 text-center">
+                                <i class="fas fa-chart-bar fa-2x text-muted mb-1"></i>
+                                <small class="d-block text-muted">Avg Score</small>
+                                {% set scores = submissions | map(attribute='auto_quality_score') | select('!=', none) | list %}
+                                <strong>{{ ((scores | sum) / (scores | length)) | round | int if scores else 'N/A' }}</strong>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mb-2">Brief</h5>
+                        <p class="text-muted">{{ challenge.brief }}</p>
+
+                        {% if challenge.rubric %}
+                        <h5 class="fw-bold mb-2">Evaluation Criteria</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead><tr><th>Dimension</th><th>Weight</th><th>Description</th></tr></thead>
+                                <tbody>
+                                    {% for dim in challenge.rubric %}
+                                    <tr>
+                                        <td><strong>{{ dim.dimension }}</strong></td>
+                                        <td>{{ dim.weight }}%</td>
+                                        <td class="text-muted small">{{ dim.description }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
+
+                        {% if current_user.is_authenticated and current_user.account_type == 'talent' %}
+                            {% set existing = submissions | selectattr('user_id', 'equalto', current_user.id) | list %}
+                            {% if existing %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-check-circle me-1"></i> You've already submitted this challenge.
+                                    <a href="{{ url_for('challenges.submission_review', id=existing[0].id) }}">View your submission</a>
+                                </div>
+                            {% else %}
+                                <a href="{{ url_for('challenges.take_challenge', id=challenge.id) }}" class="btn btn-proven-primary btn-lg"><i class="fas fa-play me-1"></i> Take Challenge</a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ url_for('auth.signup') }}" class="btn btn-proven-primary btn-lg">Sign Up to Take Challenge</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

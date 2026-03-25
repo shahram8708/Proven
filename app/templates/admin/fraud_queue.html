@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Admin — Fraud Queue{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('admin.admin_index') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-chart-line me-2"></i>Overview</a>
+                <a href="{{ url_for('admin.admin_users') }}" class="list-group-item list-group-item-action border-0"><i class="fas fa-users me-2"></i>Users</a>
+                <a href="{{ url_for('admin.fraud_queue') }}" class="list-group-item list-group-item-action active border-0"><i class="fas fa-exclamation-triangle me-2"></i>Fraud Queue</a>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Fraud Queue</h3>
+
+            {% if flagged_evidence %}
+                {% for ev in flagged_evidence %}
+                <div class="card border-0 shadow-sm mb-3 {% if ev.fraud_flag_level == 'high' %}border-danger{% else %}border-warning{% endif %}">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="badge {% if ev.fraud_flag_level == 'high' %}bg-danger{% else %}bg-warning text-dark{% endif %} mb-2">{{ ev.fraud_flag_level | title }} Risk</span>
+                                <h5 class="fw-bold mb-1">{{ ev.title }}</h5>
+                                <small class="text-muted">By {{ ev.user.full_name or ev.user.username }} ({{ ev.user.email }}) • {{ ev.created_at.strftime('%b %d, %Y') }}</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <form method="POST" action="{{ url_for('admin.admin_review_evidence', evidence_id=ev.id) }}" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="action" value="approve">
+                                    <button class="btn btn-sm btn-success"><i class="fas fa-check me-1"></i>Approve</button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin.admin_review_evidence', evidence_id=ev.id) }}" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="action" value="reject">
+                                    <button class="btn btn-sm btn-danger"><i class="fas fa-times me-1"></i>Reject</button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin.admin_review_evidence', evidence_id=ev.id) }}" class="d-inline" onsubmit="return confirm('Ban this user? Their account will be suspended.')">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="action" value="ban">
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-ban me-1"></i>Ban User</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold small">Project Context</h6>
+                                <p class="text-muted small">{{ ev.project_context[:300] }}{% if ev.project_context | length > 300 %}...{% endif %}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold small">Measurable Outcomes</h6>
+                                <p class="text-muted small">{{ ev.measurable_outcomes[:300] if ev.measurable_outcomes else 'Not provided' }}{% if ev.measurable_outcomes and ev.measurable_outcomes | length > 300 %}...{% endif %}</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-2">
+                            {% if ev.quality_score is not none %}
+                            <small class="text-muted"><i class="fas fa-star me-1"></i>Quality: {{ ev.quality_score }}/100</small>
+                            {% endif %}
+                            <small class="text-muted"><i class="fas fa-file-alt me-1"></i>{{ ev.evidence_type | replace('_', ' ') | title }}</small>
+                            <small class="text-muted"><i class="fas fa-shield-alt me-1"></i>{{ ev.verifications | length }} verification(s)</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5>No flagged evidence</h5>
+                    <p class="text-muted">All evidence submissions are clean. Check back later.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

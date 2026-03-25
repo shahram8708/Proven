@@ -1,0 +1,49 @@
+{% macro evidence_card(evidence, show_actions=False) %}
+<div class="evidence-card mb-3">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+        <div>
+            <span class="evidence-type-badge">{{ evidence.evidence_type|replace('_', ' ') }}</span>
+            {% if evidence.domain_tag %}
+                <span class="badge bg-light text-dark ms-1">{{ evidence.domain_tag }}</span>
+            {% endif %}
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            {% if evidence.verification_count and evidence.verification_count > 0 %}
+                <span class="verification-score-badge {{ evidence.quality_score|verification_color }}">
+                    <i class="fas fa-shield-alt"></i> {{ evidence.verification_count }} verified
+                </span>
+            {% else %}
+                <span class="verification-score-badge low">
+                    <i class="fas fa-shield-alt"></i> Unverified
+                </span>
+            {% endif %}
+        </div>
+    </div>
+    <h5 class="mb-2"><a href="{{ url_for('evidence.evidence_detail', id=evidence.id) }}" class="text-decoration-none text-dark">{{ evidence.title }}</a></h5>
+    <p class="text-muted mb-2">{{ evidence.situation_text[:200] }}{% if evidence.situation_text|length > 200 %}...{% endif %}</p>
+    {% if evidence.confirmed_skill_tags %}
+        <div class="mb-2">
+            {% for tag in evidence.confirmed_skill_tags[:5] %}
+                <span class="skill-tag">{{ tag.skill_name if tag.skill_name is defined else tag.get('skill_name', '') }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <small class="text-muted">{{ evidence.submitted_at|time_ago if evidence.submitted_at else 'Draft' }}</small>
+        {% if show_actions %}
+            <div>
+                <a href="{{ url_for('evidence.evidence_edit', id=evidence.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <a href="{{ url_for('verification.request_verification', evidence_id=evidence.id) }}" class="btn btn-sm btn-outline-primary">Request Verification</a>
+            </div>
+        {% endif %}
+    </div>
+    {% if evidence.quality_score %}
+        <div class="mt-2">
+            <div class="progress" style="height: 4px;">
+                <div class="progress-bar bg-{{ 'success' if evidence.quality_score >= 70 else 'warning' if evidence.quality_score >= 40 else 'secondary' }}" style="width: {{ evidence.quality_score }}%"></div>
+            </div>
+            <small class="text-muted">Quality Score: {{ evidence.quality_score|round(1) }}/100</small>
+        </div>
+    {% endif %}
+</div>
+{% endmacro %}

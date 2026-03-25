@@ -1,0 +1,13 @@
+{% macro verification_badge(verification_count, quality_score) %}
+{% if verification_count and verification_count > 0 %}
+    {% set color = 'high' if quality_score >= 80 else 'medium' if quality_score >= 50 else 'low' %}
+    <span class="verification-score-badge {{ color }}">
+        <i class="fas fa-shield-alt"></i>
+        {{ verification_count }} verification{{ 's' if verification_count != 1 else '' }}
+    </span>
+{% else %}
+    <span class="verification-score-badge low">
+        <i class="fas fa-shield-alt"></i> Unverified
+    </span>
+{% endif %}
+{% endmacro %}

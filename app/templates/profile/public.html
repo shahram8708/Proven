@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}{{ user.full_name or user.username }} — Proven Profile{% endblock %}
+{% block content %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body text-center p-4">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width:80px;height:80px;">
+                            <span class="text-white fs-2 fw-bold">{{ (user.full_name or user.username)[0] | upper }}</span>
+                        </div>
+                        <h4 class="fw-bold mb-1">{{ user.full_name or user.username }}</h4>
+                        {% if user.current_title %}<p class="text-muted mb-1">{{ user.current_title }}</p>{% endif %}
+                        {% if user.location %}<p class="text-muted small"><i class="fas fa-map-marker-alt me-1"></i>{{ user.location }}</p>{% endif %}
+                        {% if user.domain %}<span class="badge bg-primary mb-2">{{ user.domain | replace('_', ' ') | title }}</span>{% endif %}
+                        {% if user.experience_level %}<span class="badge bg-light text-muted border mb-2">{{ user.experience_level | title }}</span>{% endif %}
+
+                        <div class="row g-2 mt-3">
+                            <div class="col-4 text-center">
+                                <p class="fw-bold mb-0">{{ evidence_items | length }}</p>
+                                <small class="text-muted">Evidence</small>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p class="fw-bold mb-0" style="color:var(--proven-teal);">{{ verification_rate }}%</p>
+                                <small class="text-muted">Verified</small>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p class="fw-bold mb-0">{{ skills | length }}</p>
+                                <small class="text-muted">Skills</small>
+                            </div>
+                        </div>
+
+                        {% if current_user.is_authenticated and current_user.account_type == 'employer' and user.id != current_user.id %}
+                        <div class="mt-3">
+                            <button class="btn btn-proven-primary btn-sm w-100" onclick="requestContact({{ user.id }})"><i class="fas fa-envelope me-1"></i> Request Contact</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if user.bio %}
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-2">About</h6>
+                        <p class="text-muted small mb-0">{{ user.bio }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if skills %}
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Skill Radar</h6>
+                        <canvas id="profileRadar" height="250"></canvas>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-8">
+                {% if skills %}
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Verified Skills</h5>
+                        {% set dimensions = ['Technical', 'Leadership', 'Strategic', 'Communication', 'Analytical'] %}
+                        {% for dim in dimensions %}
+                            {% set dim_skills = skills_by_dimension.get(dim, []) %}
+                            {% if dim_skills %}
+                            <div class="mb-3">
+                                <h6 class="fw-semibold text-muted small text-uppercase mb-2">{{ dim }}</h6>
+                                {% for skill in dim_skills %}
+                                <span class="skill-tag">
+                                    {{ skill.skill.name if skill.skill else skill.skill_name }}
+                                    {% if skill.verified_evidence_count > 0 %}
+                                    <i class="fas fa-shield-alt ms-1" style="color:var(--proven-teal)" title="{{ skill.verified_evidence_count }} verified"></i>
+                                    {% endif %}
+                                </span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Evidence Portfolio</h5>
+                        {% if evidence_items %}
+                            {% from 'components/evidence_card.html' import evidence_card %}
+                            {% for ev in evidence_items %}
+                                {{ evidence_card(ev) }}
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No published evidence yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if challenge_submissions %}
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Challenge Results</h5>
+                        {% for sub in challenge_submissions %}
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                            <div>
+                                <strong class="small">{{ sub.challenge.title }}</strong>
+                                <small class="text-muted d-block">{{ sub.challenge.domain }} • {{ sub.challenge.difficulty | title }}</small>
+                            </div>
+                            {% if sub.auto_quality_score is not none %}
+                            <span class="badge {% if sub.auto_quality_score >= 70 %}bg-success{% elif sub.auto_quality_score >= 40 %}bg-warning text-dark{% else %}bg-danger{% endif %} fs-6">{{ sub.auto_quality_score }}</span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if radar_data %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    new Chart(document.getElementById('profileRadar'), {
+        type: 'radar',
+        data: {
+            labels: {{ radar_data.labels | tojson }},
+            datasets: [{
+                label: 'Skill Strength',
+                data: {{ radar_data.data | tojson }},
+                borderColor: '#0f6f5e',
+                backgroundColor: 'rgba(15,111,94,0.15)',
+                pointBackgroundColor: '#0f6f5e',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+});
+</script>
+{% endif %}
+<script>
+function requestContact(talentId) {
+    fetch('/discover/contact/' + talentId, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name=csrf-token]').content}
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            alert('Contact request sent successfully!');
+        } else {
+            alert(data.error || 'Failed to send request.');
+        }
+    });
+}
+</script>
+{% endblock %}
