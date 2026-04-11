@@ -2,7 +2,7 @@
 {% block title %}Submission Review{% endblock %}
 {% block dashboard_content %}
 <div class="mb-4">
-    <a href="{{ url_for('challenges.challenge_detail', challenge_id=submission.challenge.id) }}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-1"></i> Back to Challenge</a>
+    <a href="{{ url_for('main.challenge_preview', id=submission.challenge.id) }}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-1"></i> Back to Challenge</a>
 </div>
 
 <h3 class="fw-bold mb-4" style="color: var(--proven-navy);">Submission Review</h3>

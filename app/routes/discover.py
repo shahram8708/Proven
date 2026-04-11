@@ -68,13 +68,16 @@ def discover_search():
     filters = {
         'domain': data.get('domain', ''),
         'keyword': data.get('keyword', ''),
+        'skills': data.get('skills', ''),
         'min_evidence_count': data.get('min_evidence_count', 0),
         'skill_ids': data.get('skill_ids', []),
         'min_verification_rate': data.get('min_verification_rate', 0),
         'require_challenge': data.get('require_challenge', False),
         'country': data.get('country', ''),
+        'region': data.get('region', ''),
         'experience_min': data.get('experience_min'),
         'experience_max': data.get('experience_max'),
+        'experience_level': data.get('experience_level', ''),
         'sort_by': data.get('sort_by', 'relevance'),
         'page': data.get('page', 1),
         'per_page': 12,
@@ -182,6 +185,29 @@ def request_contact(user_id):
     if employer:
         employer.monthly_contact_credits = max(0, employer.monthly_contact_credits - 1)
 
+        # Keep discover lists useful by attaching contacted talent to a list.
+        target_list = TalentList.query.filter_by(
+            employer_account_id=employer.id
+        ).order_by(TalentList.created_at.asc()).first()
+        if not target_list:
+            target_list = TalentList(employer_account_id=employer.id, name='Contacted')
+            db.session.add(target_list)
+            db.session.flush()
+
+        membership = TalentListMember.query.filter_by(
+            list_id=target_list.id,
+            talent_user_id=user_id,
+        ).first()
+        if not membership:
+            membership = TalentListMember(
+                list_id=target_list.id,
+                talent_user_id=user_id,
+                pipeline_stage='contacted',
+            )
+            db.session.add(membership)
+        else:
+            membership.pipeline_stage = 'contacted'
+
     db.session.commit()
 
     company_name = employer.company_name if employer else current_user.full_name
@@ -190,9 +216,25 @@ def request_contact(user_id):
     return jsonify({'success': True, 'message': 'Contact request sent.'})
 
 
-@discover_bp.route('/discover/lists')
+@discover_bp.route('/discover/lists', methods=['GET', 'POST'])
 @employer_required
 def talent_lists():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        if not name:
+            flash('List name is required.', 'warning')
+            return redirect(url_for('discover.talent_lists'))
+
+        employer = EmployerAccount.query.filter_by(owner_user_id=current_user.id).first()
+        if not employer:
+            abort(403)
+
+        tl = TalentList(employer_account_id=employer.id, name=name)
+        db.session.add(tl)
+        db.session.commit()
+        flash('List created.', 'success')
+        return redirect(url_for('discover.talent_lists'))
+
     employer = EmployerAccount.query.filter_by(owner_user_id=current_user.id).first()
     lists = TalentList.query.filter_by(employer_account_id=employer.id).all() if employer else []
     return render_template('discover/lists.html', talent_lists=lists)
@@ -266,9 +308,15 @@ def update_pipeline_stage(id):
 
     data = request.get_json(silent=True) or {}
     stage = data.get('stage', 'shortlisted')
-    valid_stages = ['shortlisted', 'contacted', 'interviewing', 'offer', 'declined']
+    valid_stages = [
+        'discovered', 'reviewing', 'shortlisted', 'contacted',
+        'interviewing', 'offer', 'offered', 'hired', 'declined'
+    ]
     if stage not in valid_stages:
         return jsonify({'error': 'Invalid stage'}), 400
+
+    if stage == 'offered':
+        stage = 'offer'
 
     member.pipeline_stage = stage
     db.session.commit()

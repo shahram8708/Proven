@@ -51,11 +51,11 @@
                                     </div>
                                     <div>
                                         <small class="fw-bold d-block">{{ member.talent.full_name or member.talent.username }}</small>
-                                        <small class="text-muted">{{ member.talent.current_title or member.talent.domain or '' }}</small>
+                                        <small class="text-muted">{{ member.talent.primary_domain or '' }}</small>
                                     </div>
                                 </div>
-                                {% if member.talent.verification_rate is defined %}
-                                <small class="text-muted"><i class="fas fa-shield-alt me-1"></i>{{ (member.talent.verification_rate * 100) | round | int }}% verified</small>
+                                {% if member.talent.profile_strength is not none %}
+                                <small class="text-muted"><i class="fas fa-shield-alt me-1"></i>{{ member.talent.profile_strength | round | int }} verified</small>
                                 {% endif %}
                                 <div class="mt-2">
                                     <select class="form-select form-select-sm stage-select" data-member-id="{{ member.id }}" data-list-id="{{ tl.id }}">
@@ -65,8 +65,8 @@
                                     </select>
                                 </div>
                                 <div class="mt-2">
-                                    <textarea class="form-control form-control-sm notes-input" data-member-id="{{ member.id }}" data-list-id="{{ tl.id }}" rows="2" placeholder="Private notes..." maxlength="1000">{{ member.employer_notes or '' }}</textarea>
-                                    <button class="btn btn-sm btn-link p-0 mt-1 save-notes-btn" data-member-id="{{ member.id }}" data-list-id="{{ tl.id }}">Save</button>
+                                    <textarea class="form-control form-control-sm notes-input" data-member-id="{{ member.id }}" data-user-id="{{ member.talent_user_id }}" data-list-id="{{ tl.id }}" rows="2" placeholder="Private notes..." maxlength="1000">{{ member.employer_notes or '' }}</textarea>
+                                    <button class="btn btn-sm btn-link p-0 mt-1 save-notes-btn" data-member-id="{{ member.id }}" data-user-id="{{ member.talent_user_id }}" data-list-id="{{ tl.id }}">Save</button>
                                 </div>
                                 <div class="mt-2">
                                     <small class="text-muted">List: {{ tl.name }}</small>
@@ -82,7 +82,11 @@
     {% endfor %}
 </div>
 
-{% if not talent_lists or (talent_lists | sum(attribute='members', start=[]) | length) == 0 %}
+{% set ns = namespace(total_members=0) %}
+{% for tl in talent_lists %}
+    {% set ns.total_members = ns.total_members + tl.members.count() %}
+{% endfor %}
+{% if not talent_lists or ns.total_members == 0 %}
 <div class="text-center py-5">
     <i class="fas fa-columns fa-3x text-muted mb-3"></i>
     <h5>Your pipeline is empty</h5>
@@ -104,12 +108,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.stage-select').forEach(function(select) {
         select.addEventListener('change', function() {
             const memberId = this.dataset.memberId;
-            const listId = this.dataset.listId;
             const newStage = this.value;
-            fetch('/discover/lists/' + listId + '/pipeline', {
+            fetch('/discover/lists/member/' + memberId + '/stage', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name=csrf-token]').content},
-                body: JSON.stringify({member_id: parseInt(memberId), stage: newStage})
+                body: JSON.stringify({stage: newStage})
             }).then(r => r.json()).then(data => {
                 if (data.success) location.reload();
             });
@@ -119,12 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.save-notes-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
             const memberId = this.dataset.memberId;
+            const userId = this.dataset.userId;
             const listId = this.dataset.listId;
             const notes = document.querySelector('.notes-input[data-member-id="' + memberId + '"][data-list-id="' + listId + '"]').value;
-            fetch('/discover/lists/' + listId + '/notes', {
+            fetch('/discover/notes/' + userId, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name=csrf-token]').content},
-                body: JSON.stringify({member_id: parseInt(memberId), notes: notes})
+                body: JSON.stringify({notes: notes})
             }).then(r => r.json()).then(data => {
                 if (data.success) {
                     btn.textContent = 'Saved!';

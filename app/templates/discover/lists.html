@@ -6,22 +6,17 @@
     <button class="btn btn-proven-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createListModal"><i class="fas fa-plus me-1"></i> New List</button>
 </div>
 
-{% if lists %}
-    {% for tl in lists %}
+{% if talent_lists %}
+    {% for tl in talent_lists %}
     <div class="card border-0 shadow-sm mb-3">
         <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <h5 class="fw-bold mb-1">{{ tl.name }}</h5>
-                    {% if tl.description %}<p class="text-muted small mb-2">{{ tl.description }}</p>{% endif %}
-                    <small class="text-muted">{{ tl.members | length }} candidate{{ 's' if tl.members | length != 1 }} • Created {{ tl.created_at.strftime('%b %d, %Y') }}</small>
+                    <small class="text-muted">{{ tl.members.count() }} candidate{{ 's' if tl.members.count() != 1 }} • Created {{ tl.created_at.strftime('%b %d, %Y') }}</small>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ url_for('employer_dashboard.pipeline') }}" class="btn btn-sm btn-outline-primary"><i class="fas fa-columns me-1"></i> Pipeline</a>
-                    <form method="POST" action="{{ url_for('discover.delete_talent_list', list_id=tl.id) }}" onsubmit="return confirm('Delete this list?')">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                    </form>
+                    <a href="{{ url_for('employer_dashboard.candidate_pipeline') }}" class="btn btn-sm btn-outline-primary"><i class="fas fa-columns me-1"></i> Pipeline</a>
                 </div>
             </div>
 
@@ -43,9 +38,9 @@
                         <tr>
                             <td>
                                 <a href="{{ url_for('profile.public_profile', username=member.talent.username) }}" class="fw-semibold text-decoration-none">{{ member.talent.full_name or member.talent.username }}</a>
-                                {% if member.talent.current_title %}<small class="text-muted d-block">{{ member.talent.current_title }}</small>{% endif %}
+                                {% if member.talent.primary_domain %}<small class="text-muted d-block">{{ member.talent.primary_domain }}</small>{% endif %}
                             </td>
-                            <td><small>{{ member.talent.domain or '-' }}</small></td>
+                            <td><small>{{ member.talent.primary_domain or '-' }}</small></td>
                             <td>
                                 {% if member.talent.verification_rate is defined %}
                                     <span class="verification-score-badge {% if member.talent.verification_rate >= 0.7 %}high{% elif member.talent.verification_rate >= 0.4 %}medium{% else %}low{% endif %}">
@@ -56,13 +51,12 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <select class="form-select form-select-sm stage-select" data-member-id="{{ member.id }}" data-list-id="{{ tl.id }}" style="width:auto;">
-                                    <option value="discovered" {% if member.pipeline_stage == 'discovered' %}selected{% endif %}>Discovered</option>
-                                    <option value="reviewing" {% if member.pipeline_stage == 'reviewing' %}selected{% endif %}>Reviewing</option>
+                                <select class="form-select form-select-sm stage-select" data-member-id="{{ member.id }}" style="width:auto;">
                                     <option value="shortlisted" {% if member.pipeline_stage == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                                    <option value="contacted" {% if member.pipeline_stage == 'contacted' %}selected{% endif %}>Contacted</option>
                                     <option value="interviewing" {% if member.pipeline_stage == 'interviewing' %}selected{% endif %}>Interviewing</option>
-                                    <option value="offered" {% if member.pipeline_stage == 'offered' %}selected{% endif %}>Offered</option>
-                                    <option value="hired" {% if member.pipeline_stage == 'hired' %}selected{% endif %}>Hired</option>
+                                    <option value="offer" {% if member.pipeline_stage == 'offer' %}selected{% endif %}>Offer</option>
+                                    <option value="declined" {% if member.pipeline_stage == 'declined' %}selected{% endif %}>Declined</option>
                                 </select>
                             </td>
                             <td>
@@ -89,7 +83,7 @@
 <div class="modal fade" id="createListModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url_for('discover.talent_lists') }}">
+            <form method="POST" action="{{ url_for('discover.create_list') }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-header border-0">
                     <h5 class="modal-title fw-bold">Create New List</h5>
@@ -119,10 +113,10 @@
 <script>
 document.querySelectorAll('.stage-select').forEach(function(select) {
     select.addEventListener('change', function() {
-        fetch('/discover/lists/' + this.dataset.listId + '/pipeline', {
+        fetch('/discover/lists/member/' + this.dataset.memberId + '/stage', {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name=csrf-token]').content},
-            body: JSON.stringify({member_id: parseInt(this.dataset.memberId), stage: this.value})
+            body: JSON.stringify({stage: this.value})
         });
     });
 });

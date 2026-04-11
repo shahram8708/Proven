@@ -12,24 +12,26 @@
                     <h5 class="fw-bold mb-3">Personal Information</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            {{ form.full_name.label(class="form-label fw-semibold") }}
-                            {{ form.full_name(class="form-control") }}
-                            {% for error in form.full_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            {{ form.first_name.label(class="form-label fw-semibold") }}
+                            {{ form.first_name(class="form-control") }}
+                            {% for error in form.first_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                         </div>
                         <div class="col-md-6">
-                            {{ form.current_title.label(class="form-label fw-semibold") }}
-                            {{ form.current_title(class="form-control", placeholder="e.g. Senior Software Engineer") }}
-                            {% for error in form.current_title.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                            {{ form.last_name.label(class="form-label fw-semibold") }}
+                            {{ form.last_name(class="form-control") }}
+                            {% for error in form.last_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                         </div>
                     </div>
                     <div class="row g-3 mt-1">
                         <div class="col-md-6">
-                            {{ form.location.label(class="form-label fw-semibold") }}
-                            {{ form.location(class="form-control", placeholder="e.g. Bangalore, India") }}
+                            {{ form.location_city.label(class="form-label fw-semibold") }}
+                            {{ form.location_city(class="form-control", placeholder="e.g. Bangalore") }}
+                            {% for error in form.location_city.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                         </div>
                         <div class="col-md-6">
-                            {{ form.experience_level.label(class="form-label fw-semibold") }}
-                            {{ form.experience_level(class="form-select") }}
+                            {{ form.location_country.label(class="form-label fw-semibold") }}
+                            {{ form.location_country(class="form-control", placeholder="e.g. India") }}
+                            {% for error in form.location_country.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                         </div>
                     </div>
                 </div>
@@ -39,31 +41,31 @@
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3">Professional Details</h5>
                     <div class="mb-3">
-                        {{ form.bio.label(class="form-label fw-semibold") }}
-                        {{ form.bio(class="form-control", rows="4", placeholder="Brief professional bio...") }}
-                        <small class="text-muted">Max 500 characters</small>
+                        {{ form.professional_summary.label(class="form-label fw-semibold") }}
+                        {{ form.professional_summary(class="form-control", rows="5", placeholder="Brief professional summary...") }}
+                        {% for error in form.professional_summary.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        <small class="text-muted">Max 2000 characters</small>
                     </div>
                     <div class="mb-3">
-                        {{ form.domain.label(class="form-label fw-semibold") }}
-                        {{ form.domain(class="form-select") }}
+                        {{ form.primary_domain.label(class="form-label fw-semibold") }}
+                        {{ form.primary_domain(class="form-select") }}
+                        {% for error in form.primary_domain.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                     </div>
                 </div>
             </div>
 
             <div class="card border-0 shadow-sm mb-3">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3">Links</h5>
-                    <div class="mb-3">
-                        {{ form.linkedin_url.label(class="form-label fw-semibold") }}
-                        {{ form.linkedin_url(class="form-control", placeholder="https://linkedin.com/in/yourprofile") }}
+                    <h5 class="fw-bold mb-3">Opportunity Preferences</h5>
+                    <div class="form-check mb-3">
+                        {{ form.open_to_opportunities(class="form-check-input") }}
+                        {{ form.open_to_opportunities.label(class="form-check-label fw-semibold") }}
+                        {% for error in form.open_to_opportunities.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
                     </div>
-                    <div class="mb-3">
-                        {{ form.github_url.label(class="form-label fw-semibold") }}
-                        {{ form.github_url(class="form-control", placeholder="https://github.com/yourusername") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.portfolio_url.label(class="form-label fw-semibold") }}
-                        {{ form.portfolio_url(class="form-control", placeholder="https://yourportfolio.com") }}
+                    <div class="mb-1">
+                        {{ form.opportunity_type.label(class="form-label fw-semibold") }}
+                        {{ form.opportunity_type(class="form-select") }}
+                        {% for error in form.opportunity_type.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                     </div>
                 </div>
             </div>

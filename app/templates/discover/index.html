@@ -115,6 +115,13 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+window.DISCOVER_TALENT_LISTS = [
+{% for tl in talent_lists %}
+    { id: {{ tl.id }}, name: {{ tl.name | tojson }} }{% if not loop.last %},{% endif %}
+{% endfor %}
+];
+</script>
 <script src="{{ url_for('static', filename='js/discover_filters.js') }}"></script>
 <script src="{{ url_for('static', filename='js/profile_drawer.js') }}"></script>
 {% endblock %}

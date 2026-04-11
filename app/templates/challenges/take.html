@@ -42,7 +42,7 @@
     </div>
 
     <div class="col-lg-8">
-        <form method="POST" action="{{ url_for('challenges.take_challenge', challenge_id=challenge.id) }}" id="challengeForm">
+        <form method="POST" action="{{ url_for('challenges.take_challenge', id=challenge.id) }}" id="challengeForm">
             {{ form.hidden_tag() }}
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between mt-3">
-                <a href="{{ url_for('challenges.challenge_detail', challenge_id=challenge.id) }}" class="btn btn-outline-secondary" onclick="return confirm('Leave the challenge? Your progress will be lost.')">Cancel</a>
+                <a href="{{ url_for('main.challenge_preview', id=challenge.id) }}" class="btn btn-outline-secondary" onclick="return confirm('Leave the challenge? Your progress will be lost.')">Cancel</a>
                 <button type="submit" class="btn btn-proven-primary btn-lg"><i class="fas fa-paper-plane me-1"></i> Submit Response</button>
             </div>
         </form>

@@ -15,13 +15,13 @@
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-3">Current Plan</h5>
-                {% if current_user.subscription_tier %}
+                {% if current_user.is_premium %}
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <span class="badge bg-success fs-6 mb-2">{{ current_user.subscription_tier | title }}</span>
                             <p class="text-muted small mb-0">
-                                {% if current_user.subscription_end %}
-                                    Active until {{ current_user.subscription_end.strftime('%b %d, %Y') }}
+                                {% if current_user.subscription_expires %}
+                                    Active until {{ current_user.subscription_expires.strftime('%b %d, %Y') }}
                                 {% else %}
                                     Active subscription
                                 {% endif %}
@@ -32,6 +32,8 @@
                                 <span class="fw-bold" style="color:var(--proven-navy);">₹8,299/mo</span>
                             {% elif current_user.subscription_tier == 'employer_team' %}
                                 <span class="fw-bold" style="color:var(--proven-navy);">₹29,199/mo</span>
+                            {% elif current_user.subscription_tier == 'talent_pro' %}
+                                <span class="fw-bold" style="color:var(--proven-navy);">₹749/mo</span>
                             {% endif %}
                         </div>
                     </div>
@@ -52,7 +54,7 @@
                 <h5 class="fw-bold mb-3">Contact Credits</h5>
                 <div class="row">
                     <div class="col-md-6">
-                        <p class="display-5 fw-bold mb-0" style="color:var(--proven-navy);">{{ current_user.employer_account.contact_credits_remaining if current_user.employer_account else 0 }}</p>
+                        <p class="display-5 fw-bold mb-0" style="color:var(--proven-navy);">{{ current_user.employer_account.monthly_contact_credits if current_user.employer_account else 0 }}</p>
                         <small class="text-muted">credits remaining this month</small>
                     </div>
                     <div class="col-md-6">

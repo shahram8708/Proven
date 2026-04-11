@@ -17,20 +17,13 @@
                 <div class="card-body">
                     <form method="GET" class="row g-2 align-items-end">
                         <div class="col-md-4">
-                            <input type="text" name="q" class="form-control form-control-sm" placeholder="Search by name, email, username..." value="{{ request.args.get('q', '') }}">
+                            <input type="text" name="search" class="form-control form-control-sm" placeholder="Search by name, email, username..." value="{{ search }}">
                         </div>
                         <div class="col-md-2">
                             <select name="account_type" class="form-select form-select-sm">
                                 <option value="">All Types</option>
-                                <option value="talent" {% if request.args.get('account_type') == 'talent' %}selected{% endif %}>Talent</option>
-                                <option value="employer" {% if request.args.get('account_type') == 'employer' %}selected{% endif %}>Employer</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <select name="status" class="form-select form-select-sm">
-                                <option value="">All Status</option>
-                                <option value="active" {% if request.args.get('status') == 'active' %}selected{% endif %}>Active</option>
-                                <option value="banned" {% if request.args.get('status') == 'banned' %}selected{% endif %}>Banned</option>
+                                <option value="talent" {% if account_type == 'talent' %}selected{% endif %}>Talent</option>
+                                <option value="employer" {% if account_type == 'employer' %}selected{% endif %}>Employer</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -61,12 +54,11 @@
                                     <small class="text-muted d-block">{{ user.email }}</small>
                                 </td>
                                 <td><span class="badge {% if user.account_type == 'talent' %}bg-primary{% else %}bg-info{% endif %}">{{ user.account_type | title }}</span></td>
-                                <td>{% if user.email_verified %}<i class="fas fa-check-circle text-success"></i>{% else %}<i class="fas fa-times-circle text-danger"></i>{% endif %}</td>
-                                <td>{{ user.evidence_submissions | length if user.evidence_submissions else 0 }}</td>
+                                <td>{% if user.is_email_verified %}<i class="fas fa-check-circle text-success"></i>{% else %}<i class="fas fa-times-circle text-danger"></i>{% endif %}</td>
+                                <td>{{ user.evidence_submissions.count() }}</td>
                                 <td>{{ user.created_at.strftime('%b %d, %Y') }}</td>
                                 <td>
-                                    {% if user.is_banned %}<span class="badge bg-danger">Banned</span>
-                                    {% elif user.is_admin %}<span class="badge bg-dark">Admin</span>
+                                    {% if user.is_admin %}<span class="badge bg-dark">Admin</span>
                                     {% else %}<span class="badge bg-success">Active</span>{% endif %}
                                 </td>
                             </tr>
@@ -82,7 +74,7 @@
                     {% for page in users.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                         {% if page %}
                             <li class="page-item {% if page == users.page %}active{% endif %}">
-                                <a class="page-link" href="{{ url_for('admin.admin_users', page=page, q=request.args.get('q', ''), account_type=request.args.get('account_type', '')) }}">{{ page }}</a>
+                                <a class="page-link" href="{{ url_for('admin.admin_users', page=page, search=search, account_type=account_type) }}">{{ page }}</a>
                             </li>
                         {% else %}
                             <li class="page-item disabled"><span class="page-link">...</span></li>

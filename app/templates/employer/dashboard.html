@@ -10,7 +10,7 @@
     <div class="col-md-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center">
-                <p class="display-5 fw-bold mb-1" style="color: var(--proven-navy);">{{ employer_account.contact_credits_remaining if employer_account else 0 }}</p>
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-navy);">{{ employer.monthly_contact_credits if employer else 0 }}</p>
                 <h6 class="fw-bold mb-0">Contact Credits</h6>
                 <small class="text-muted">remaining this month</small>
             </div>
@@ -28,9 +28,9 @@
     <div class="col-md-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center">
-                {% set total_pipeline = 0 %}
-                {% for tl in talent_lists %}{% set total_pipeline = total_pipeline + tl.members | length %}{% endfor %}
-                <p class="display-5 fw-bold mb-1" style="color: var(--proven-amber);">{{ total_pipeline }}</p>
+                {% set ns = namespace(total_pipeline=0) %}
+                {% for tl in talent_lists %}{% set ns.total_pipeline = ns.total_pipeline + tl.members.count() %}{% endfor %}
+                <p class="display-5 fw-bold mb-1" style="color: var(--proven-amber);">{{ ns.total_pipeline }}</p>
                 <h6 class="fw-bold mb-0">Pipeline Candidates</h6>
                 <small class="text-muted">across all lists</small>
             </div>
@@ -52,9 +52,9 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
                 <h6 class="fw-bold mb-2">Subscription</h6>
-                {% if employer_account and employer_account.subscription_tier %}
-                    <span class="badge bg-success mb-2">{{ employer_account.subscription_tier | title }}</span>
-                    <p class="text-muted small mb-0">Active since {{ employer_account.subscription_start.strftime('%b %d, %Y') if employer_account.subscription_start else 'N/A' }}</p>
+                {% if employer and employer.subscription_tier %}
+                    <span class="badge bg-success mb-2">{{ employer.subscription_tier | title }}</span>
+                    <p class="text-muted small mb-0">Active since {{ employer.created_at.strftime('%b %d, %Y') if employer.created_at else 'N/A' }}</p>
                 {% else %}
                     <span class="badge bg-secondary mb-2">Free</span>
                     <p class="text-muted small mb-2">Upgrade to search and contact verified talent.</p>
@@ -67,9 +67,9 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
                 <h6 class="fw-bold mb-2">Company Profile</h6>
-                {% if employer_account %}
-                    <p class="mb-1"><strong>{{ employer_account.company_name or 'Not set' }}</strong></p>
-                    <p class="text-muted small mb-0">{{ employer_account.company_description or 'Add a company description to attract talent.' }}</p>
+                {% if employer %}
+                    <p class="mb-1"><strong>{{ employer.company_name or 'Not set' }}</strong></p>
+                    <p class="text-muted small mb-0">{{ employer.industry or 'Add your industry to attract relevant talent.' }}</p>
                 {% else %}
                     <p class="text-muted small">Complete your company profile to start hiring.</p>
                 {% endif %}
@@ -91,7 +91,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
                         <div>
                             <strong>{{ tl.name }}</strong>
-                            <small class="text-muted d-block">{{ tl.members | length }} candidate{{ 's' if tl.members | length != 1 }}</small>
+                            <small class="text-muted d-block">{{ tl.members.count() }} candidate{{ 's' if tl.members.count() != 1 }}</small>
                         </div>
                         <a href="{{ url_for('discover.talent_lists') }}" class="btn btn-sm btn-outline-secondary">View</a>
                     </div>

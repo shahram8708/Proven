@@ -35,5 +35,10 @@
             {% endfor %}
         </div>
     {% endif %}
+    <div class="mt-2">
+        <a href="{{ url_for('profile.public_profile', username=user.username) }}" class="small text-decoration-none" onclick="event.stopPropagation();">
+            View full profile <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+    </div>
 </div>
 {% endmacro %}

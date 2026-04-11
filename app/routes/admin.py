@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.evidence import EvidenceSubmission
 from app.models.verification import Verification
 from app.models.challenge import ChallengeSubmission
+from app.models.connection import ContactRequest
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -13,35 +14,24 @@ admin_bp = Blueprint('admin', __name__)
 @admin_bp.route('/admin')
 @admin_required
 def admin_index():
-    total_users = User.query.count()
-    talent_users = User.query.filter_by(account_type='talent').count()
-    employer_users = User.query.filter_by(account_type='employer').count()
-    total_evidence = EvidenceSubmission.query.count()
-    published_evidence = EvidenceSubmission.query.filter_by(is_published=True).count()
-    draft_evidence = EvidenceSubmission.query.filter_by(is_draft=True).count()
-    total_verifications = Verification.query.count()
-    confirmed_verifications = Verification.query.filter(
-        Verification.response.in_(['confirmed', 'confirmed_with_qualification'])
-    ).count()
-    pending_verifications = Verification.query.filter_by(response='pending').count()
-    total_challenges = ChallengeSubmission.query.count()
-    fraud_count = EvidenceSubmission.query.filter(
-        EvidenceSubmission.fraud_flag_level.in_(['medium', 'high'])
-    ).count()
+    stats = {
+        'total_users': User.query.count(),
+        'total_evidence': EvidenceSubmission.query.count(),
+        'total_verifications': Verification.query.count(),
+        'fraud_flagged': EvidenceSubmission.query.filter(
+            EvidenceSubmission.fraud_flag_level.in_(['medium', 'high'])
+        ).count(),
+        'talent_count': User.query.filter_by(account_type='talent').count(),
+        'employer_count': User.query.filter_by(account_type='employer').count(),
+        'verified_emails': User.query.filter_by(is_email_verified=True).count(),
+        'active_subscriptions': User.query.filter_by(is_premium=True).count(),
+        'published_evidence': EvidenceSubmission.query.filter_by(is_published=True).count(),
+        'draft_evidence': EvidenceSubmission.query.filter_by(is_draft=True).count(),
+        'challenge_submissions': ChallengeSubmission.query.count(),
+        'contact_requests': ContactRequest.query.count(),
+    }
 
-    return render_template('admin/index.html',
-        total_users=total_users,
-        talent_users=talent_users,
-        employer_users=employer_users,
-        total_evidence=total_evidence,
-        published_evidence=published_evidence,
-        draft_evidence=draft_evidence,
-        total_verifications=total_verifications,
-        confirmed_verifications=confirmed_verifications,
-        pending_verifications=pending_verifications,
-        total_challenges=total_challenges,
-        fraud_count=fraud_count,
-    )
+    return render_template('admin/index.html', stats=stats)
 
 
 @admin_bp.route('/admin/users')

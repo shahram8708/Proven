@@ -32,6 +32,11 @@ def create_razorpay_order():
     if not plan:
         return jsonify({'error': 'Invalid plan'}), 400
 
+    if plan_id.startswith('employer_') and current_user.account_type != 'employer':
+        return jsonify({'error': 'This plan is available for employer accounts only.'}), 403
+    if plan_id == 'talent_pro' and current_user.account_type != 'talent':
+        return jsonify({'error': 'This plan is available for talent accounts only.'}), 403
+
     try:
         client = get_razorpay_client()
         order = client.order.create({
@@ -45,6 +50,7 @@ def create_razorpay_order():
             'amount': plan['amount'],
             'currency': 'INR',
             'key': os.environ.get('RAZORPAY_KEY_ID'),
+            'plan_name': plan['name'],
         })
     except Exception as exc:
         return jsonify({'error': str(exc)}), 500
@@ -61,6 +67,13 @@ def verify_razorpay_payment():
 
     if not all([razorpay_order_id, razorpay_payment_id, razorpay_signature]):
         return jsonify({'error': 'Missing payment data'}), 400
+
+    if plan_id not in PLANS:
+        return jsonify({'error': 'Invalid plan'}), 400
+    if plan_id.startswith('employer_') and current_user.account_type != 'employer':
+        return jsonify({'error': 'This plan is available for employer accounts only.'}), 403
+    if plan_id == 'talent_pro' and current_user.account_type != 'talent':
+        return jsonify({'error': 'This plan is available for talent accounts only.'}), 403
 
     try:
         client = get_razorpay_client()

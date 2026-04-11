@@ -28,6 +28,7 @@ class BaseConfig:
 
     # Google Gemini AI
     GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+    print(GEMINI_API_KEY)
 
     # Razorpay
     RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')

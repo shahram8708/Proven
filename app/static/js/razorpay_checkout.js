@@ -2,6 +2,22 @@
    Proven — Razorpay Checkout
    ======================================== */
 
+function parseJsonSafely(res) {
+    var contentType = res.headers.get('content-type') || '';
+    if (contentType.indexOf('application/json') !== -1) {
+        return res.json();
+    }
+    return Promise.resolve({});
+}
+
+function redirectToLoginIfNeeded(res) {
+    if (res.redirected && res.url && res.url.indexOf('/login') !== -1) {
+        window.location.href = '/login?next=' + encodeURIComponent('/pricing');
+        return true;
+    }
+    return false;
+}
+
 /**
  * Initialize Razorpay checkout for a subscription plan.
  * @param {string} planId - The plan identifier (e.g., 'starter', 'team')
@@ -17,21 +33,30 @@ function initiateCheckout(planId) {
             'X-CSRFToken': csrfToken,
             'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify({ plan: planId })
+        body: JSON.stringify({ plan_id: planId })
     })
-    .then(function (res) { return res.json(); })
+    .then(function (res) {
+        if (redirectToLoginIfNeeded(res)) return null;
+        return parseJsonSafely(res).then(function (data) {
+            if (!res.ok) {
+                throw new Error(data.error || data.message || 'Unable to create order. Please try again.');
+            }
+            return data;
+        });
+    })
     .then(function (data) {
+        if (!data) return;
         if (!data.order_id) {
-            alert(data.message || 'Unable to create order. Please try again.');
+            alert(data.error || data.message || 'Unable to create order. Please try again.');
             return;
         }
 
         var options = {
-            key: data.razorpay_key,
+            key: data.key,
             amount: data.amount,
             currency: 'INR',
             name: 'Proven',
-            description: data.plan_name + ' Plan',
+            description: 'Proven Subscription',
             order_id: data.order_id,
             handler: function (response) {
                 verifyPayment(response, planId);
@@ -56,8 +81,8 @@ function initiateCheckout(planId) {
         });
         rzp.open();
     })
-    .catch(function () {
-        alert('Something went wrong. Please try again.');
+    .catch(function (err) {
+        alert(err.message || 'Something went wrong. Please try again.');
     });
 }
 
@@ -78,21 +103,37 @@ function verifyPayment(response, planId) {
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature,
-            plan: planId
+            plan_id: planId
         })
     })
-    .then(function (res) { return res.json(); })
+    .then(function (res) {
+        if (redirectToLoginIfNeeded(res)) return null;
+        return parseJsonSafely(res).then(function (data) {
+            if (!res.ok) {
+                throw new Error(data.error || data.message || 'Payment verification failed.');
+            }
+            return data;
+        });
+    })
     .then(function (data) {
+        if (!data) return;
         if (data.success) {
             window.location.href = '/settings/billing?upgraded=true';
         } else {
-            alert(data.message || 'Payment verification failed. Please contact support.');
+            alert(data.error || data.message || 'Payment verification failed. Please contact support.');
         }
     })
-    .catch(function () {
-        alert('Verification failed. Please contact support if payment was deducted.');
+    .catch(function (err) {
+        alert(err.message || 'Verification failed. Please contact support if payment was deducted.');
     });
 }
+
+function initiateRazorpayPayment(planId) {
+    initiateCheckout(planId);
+}
+
+window.initiateCheckout = initiateCheckout;
+window.initiateRazorpayPayment = initiateRazorpayPayment;
 
 /**
  * Purchase additional contact credits.

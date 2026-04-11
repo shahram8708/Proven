@@ -18,42 +18,33 @@
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3">Account Information</h5>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Email Address</label>
-                        <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+                        {{ form.email.label(class="form-label fw-semibold") }}
+                        {{ form.email(class="form-control", readonly=true) }}
+                        {% for error in form.email.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                         <small class="text-muted">Contact support to change your email.</small>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            {{ form.first_name.label(class="form-label fw-semibold") }}
+                            {{ form.first_name(class="form-control") }}
+                            {% for error in form.first_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.last_name.label(class="form-label fw-semibold") }}
+                            {{ form.last_name(class="form-control") }}
+                            {% for error in form.last_name.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Username</label>
                         <div class="input-group">
                             <span class="input-group-text">proven.com/</span>
-                            <input type="text" class="form-control" value="{{ current_user.username }}" disabled>
+                            <input type="text" class="form-control" value="{{ current_user.username }}" readonly>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Account Type</label>
-                        <input type="text" class="form-control" value="{{ current_user.account_type | title }}" disabled>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm mb-3">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3">Change Password</h5>
-                    <div class="mb-3">
-                        {{ form.current_password.label(class="form-label fw-semibold") }}
-                        {{ form.current_password(class="form-control") }}
-                        {% for error in form.current_password.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.new_password.label(class="form-label fw-semibold") }}
-                        {{ form.new_password(class="form-control") }}
-                        {% for error in form.new_password.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
-                        <small class="text-muted">Minimum 12 characters</small>
-                    </div>
-                    <div class="mb-3">
-                        {{ form.confirm_password.label(class="form-label fw-semibold") }}
-                        {{ form.confirm_password(class="form-control") }}
-                        {% for error in form.confirm_password.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                        <input type="text" class="form-control" value="{{ current_user.account_type | title }}" readonly>
                     </div>
                 </div>
             </div>
